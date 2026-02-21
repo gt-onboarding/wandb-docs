@@ -1,0 +1,1091 @@
+---
+title: 실행
+namespace: python_sdk_actions
+python_object_type: class
+---
+
+import { GitHubLink } from '/snippets/ko/_includes/github-source-link.mdx';
+
+<GitHubLink url="https://github.com/wandb/wandb/blob/main/wandb/sdk/wandb_run.py" />
+
+
+## <kbd>class</kbd> `Run`
+
+W&amp;B가 기록하는 연산 단위입니다. 일반적으로 하나의 ML 실험을 의미합니다.
+
+새 실행을 생성하려면 [`wandb.init()`](https://docs.wandb.ai/ref/python/init/)을 호출하십시오. `wandb.init()`은 새 실행을 시작하고 `wandb.Run` 객체를 반환합니다. 각 실행에는 고유한 ID(실행 ID)가 연결됩니다. 실행을 자동으로 종료하려면 컨텍스트 매니저(`with` 문) 사용을 권장합니다.
+
+분산 학습 실험의 경우, 프로세스마다 하나의 실행을 사용하여 각 프로세스를 개별적으로 추적하거나, 모든 프로세스를 단일 실행으로 추적할 수 있습니다. 자세한 내용은 [Log distributed training experiments](https://docs.wandb.ai/guides/track/log/distributed-training)를 참고하십시오.
+
+`wandb.Run.log()`을 사용하여 실행에 데이터를 기록할 수 있습니다. `wandb.Run.log()`을 사용해 기록하는 모든 항목은 해당 실행으로 전송됩니다. 자세한 내용은 [Create an experiment](https://docs.wandb.ai/guides/track/create-an-experiment/) 또는 [`wandb.init`](https://docs.wandb.ai/ref/python/init/) API 레퍼런스 페이지를 참고하십시오.
+
+[`wandb.apis.public`](https://docs.wandb.ai/ref/python/public-api/api/) 네임스페이스에도 또 다른 `Run` 객체가 있습니다. 이 객체는 이미 생성된 실행과 상호작용하기 위해 사용합니다.
+
+**Attributes:**
+
+* `summary`: (Summary) 실행에 대한 요약으로, 딕셔너리와 유사한 객체입니다. 자세한 내용은 [Log summary metrics](https://docs.wandb.ai/guides/track/log/log-summary/)를 참고하십시오.
+* `config`: (Config) 실행에 대한 구성 설정을 포함하는 딕셔너리와 유사한 객체입니다. 하이퍼파라미터 및 기타 구성값을 저장하는 데 사용됩니다.
+
+**Examples:**
+`wandb.init()`으로 실행을 생성합니다:
+
+```python
+import wandb
+
+# 새 실행을 시작하고 데이터를 기록합니다
+# 컨텍스트 관리자(`with` 문)를 사용하여 실행을 자동으로 종료합니다
+with wandb.init(entity="entity", project="project") as run:
+    run.log({"accuracy": acc, "loss": loss})
+```
+
+
+### <kbd>property</kbd> Run.config
+
+해당 실행에 연결된 Config 객체입니다. 
+
+**반환값:**
+
+- `wandb_config.Config`: 이 config 속성의 값입니다.
+
+---
+
+### <kbd>property</kbd> Run.config_static
+
+이 실행과 연결된 정적 config 객체입니다. 
+
+**Returns:**
+
+- `wandb_config.ConfigStatic`: config_static 속성 값.
+
+---
+
+### <kbd>property</kbd> Run.dir
+
+실행과 관련된 파일이 저장되는 디렉터리입니다. 
+
+**Returns:**
+
+- `str`: dir 속성의 값입니다.
+
+---
+
+### <kbd>property</kbd> Run.disabled
+
+실행이 비활성화되어 있으면 True, 그렇지 않으면 False입니다. 
+
+**Returns:**
+
+- `bool`: disabled 속성의 값입니다.
+
+---
+
+### <kbd>property</kbd> Run.entity
+
+이 실행과 연결된 W&B 엔터티의 이름입니다. 
+
+엔터티는 사용자 이름이거나 팀 또는 조직의 이름일 수 있습니다. 
+
+**반환:**
+
+- `str`: `entity` 속성 값입니다.
+
+---
+
+### <kbd>property</kbd> Run.group
+
+이 실행에 연결된 그룹 이름을 반환합니다. 
+
+실행들을 그룹으로 묶으면 관련된 실험들을 W&B UI에서 한데 모아 체계적으로 관리하고 시각화할 수 있습니다. 이는 분산 학습이나 교차 검증처럼 여러 실행을 하나의 통합된 실험으로 보고 관리해야 하는 상황에서 특히 유용합니다. 
+
+모든 프로세스가 동일한 실행 객체를 공유하는 공유 모드(shared mode)에서는 실행이 하나뿐이므로, 별도로 그룹을 지정할 필요가 없는 경우가 대부분입니다. 
+
+**반환값:**
+
+- `str`: group 속성의 값.
+
+---
+
+### <kbd>property</kbd> Run.id
+
+이 실행의 식별자입니다. 
+
+**Returns:**
+
+- `str`: id 속성 값입니다.
+
+---
+
+### <kbd>property</kbd> Run.job_type
+
+실행과 연관된 작업 유형의 이름입니다. 
+
+W&B 앱의 실행 Overview 페이지에서 실행의 작업 유형을 확인할 수 있습니다. 
+
+이 속성을 사용해 실행을 "training", "evaluation", "inference"와 같은 작업 유형별로 분류할 수 있습니다. 이는 동일한 프로젝트 내에 서로 다른 작업 유형을 가진 여러 실행이 있을 때, W&B UI에서 실행을 체계적으로 정리하고 필터링하는 데 유용합니다. 자세한 내용은 [실행 정리](https://docs.wandb.ai/guides/runs/#organize-runs)를 참고하세요. 
+
+**반환값:**
+
+- `str`: job_type 속성의 값.
+
+---
+
+### <kbd>property</kbd> Run.name
+
+실행의 표시 이름입니다. 
+
+표시 이름은 고유함이 보장되지 않으며, 설명적인 이름일 수 있습니다. 기본적으로 무작위로 생성됩니다. 
+
+**Returns:**
+
+- `str | None`: name 속성의 값입니다.
+
+### <kbd>property</kbd> Run.notes
+
+실행과 관련된 노트(있는 경우)입니다. 
+
+노트는 여러 줄 문자열일 수 있으며, `$$` 안에서 마크다운과 LaTeX 수식을 사용할 수 있습니다. 예: `$x + 3$`. 
+
+**반환값:**
+
+- `str | None`: `notes` 속성 값.
+---
+
+### <kbd>property</kbd> Run.offline
+
+실행이 오프라인 상태이면 True, 그렇지 않으면 False입니다. 
+
+**반환값:**
+
+- `bool`: offline 속성 값.
+
+---
+
+### <kbd>property</kbd> Run.path
+
+실행의 경로입니다. 
+
+실행 경로에는 `entity/project/run_id` 형식으로 엔터티, 프로젝트, 실행 ID가 포함됩니다. 
+
+**반환값:**
+
+- `str`: path 속성 값.
+---
+
+### <kbd>property</kbd> Run.project
+
+실행과 연관된 W&B 프로젝트의 이름입니다. 
+
+**반환값:**
+
+- `str`: `project` 속성 값.
+---
+
+### <kbd>property</kbd> Run.project_url
+
+실행과 연관된 W&B 프로젝트의 URL입니다(있는 경우). 
+
+오프라인 실행에는 프로젝트 URL이 없습니다. 
+
+**반환값:**
+
+- `str | None`: `project_url` 프로퍼티 값입니다.
+
+---
+
+### <kbd>property</kbd> Run.resumed
+
+실행이 재개되었으면 True, 그렇지 않으면 False입니다. 
+
+**반환값:**
+
+- `bool`: `resumed` 속성 값.
+
+---
+
+### <kbd>property</kbd> Run.settings
+
+실행의 Settings 객체에 대한 변경 불가능한(frozen) 복사본입니다. 
+
+**Returns:**
+
+- `Settings`: settings 속성의 값입니다.
+
+### <kbd>property</kbd> Run.start_time
+
+실행이 시작된 시각을 나타내는 Unix 타임스탬프(초 단위)입니다. 
+
+**반환값:**
+
+- `float`: start_time 속성의 값입니다.
+
+---
+
+### <kbd>property</kbd> Run.sweep_id
+
+이 실행과 연관된 스윕의 식별자입니다(있는 경우).
+
+**반환값:**
+
+- `str | None`: sweep_id 속성의 값입니다.
+---
+
+### <kbd>property</kbd> Run.sweep_url
+
+실행과 연결된 sweep의 URL입니다(있는 경우에만 존재합니다). 
+
+오프라인 실행에는 sweep URL이 없습니다. 
+
+**반환:**
+
+- `str | None`: sweep_url 속성 값.
+---
+
+### <kbd>property</kbd> Run.tags
+
+실행과 연결된 태그 목록입니다(있는 경우).
+
+**반환값:**
+
+- `tuple | None`: tags 속성 값입니다.
+
+### <kbd>property</kbd> Run.url
+
+있는 경우, W&B 실행의 URL입니다. 
+
+오프라인 실행에는 URL이 없습니다. 
+
+**반환값:**
+
+- `str | None`: URL 속성 값입니다.
+
+---
+
+### <kbd>메서드</kbd> `Run.alert`
+
+```python
+alert(
+    title: 'str',
+    text: 'str',
+    level: 'str | AlertLevel | None' = None,
+    wait_duration: 'int | float | timedelta | None' = None
+) → None
+```
+
+지정한 제목과 텍스트를 사용해 알림을 생성합니다.
+
+**인자:**
+
+* `title`:  알림의 제목입니다. 64자 미만이어야 합니다.
+* `text`:  알림의 본문 텍스트입니다.
+* `level`:  사용할 알림 레벨입니다. `INFO`, `WARN`, `ERROR` 중 하나입니다.
+* `wait_duration`:  동일한 제목의 알림을 다시 보내기 전까지 대기할 시간(초 단위)입니다.
+
+***
+
+
+### <kbd>메서드</kbd> `Run.define_metric`
+
+```python
+define_metric(
+    name: 'str',
+    step_metric: 'str | wandb_metric.Metric | None' = None,
+    step_sync: 'bool | None' = None,
+    hidden: 'bool | None' = None,
+    summary: 'str | None' = None,
+    goal: 'str | None' = None,
+    overwrite: 'bool | None' = None
+) → wandb_metric.Metric
+```
+
+`wandb.Run.log()`로 로깅되는 메트릭을 사용자 정의합니다.
+
+**Args:**
+
+* `name`:  사용자 정의할 메트릭의 이름입니다.
+* `step_metric`:  자동으로 생성되는 차트에서 이 메트릭의 X축으로 사용할 다른 메트릭의 이름입니다.
+* `step_sync`:  `wandb.Run.log()` 호출 시 명시적으로 제공되지 않은 경우 `step_metric`의 마지막 값을 자동으로 삽입합니다. `step_metric`이 지정되면 기본값은 True입니다.
+* `hidden`:  이 메트릭을 자동 플롯에서 숨깁니다.
+* `summary`:  summary에 추가할 집계 메트릭을 지정합니다. 지원되는 집계 방식은 &quot;min&quot;, &quot;max&quot;, &quot;mean&quot;, &quot;last&quot;, &quot;first&quot;, &quot;best&quot;, &quot;copy&quot;, &quot;none&quot;입니다. &quot;none&quot;은 summary가 생성되지 않도록 합니다. &quot;best&quot;는 goal 매개변수와 함께 사용되며, &quot;best&quot;는 사용 중단(deprecated)되었으므로 사용하지 말고 대신 &quot;min&quot; 또는 &quot;max&quot;를 사용하십시오. &quot;copy&quot; 또한 사용 중단되었으므로 사용하지 마십시오.
+* `goal`:  &quot;best&quot; summary 타입을 어떻게 해석할지 지정합니다. 지원되는 옵션은 &quot;minimize&quot;와 &quot;maximize&quot;입니다. &quot;goal&quot;은 사용 중단되었으므로 사용하지 말고 대신 &quot;min&quot; 또는 &quot;max&quot;를 사용하십시오.
+* `overwrite`:  false인 경우, 동일한 메트릭에 대한 이전 `define_metric` 호출과 이 호출이 병합되며, 지정되지 않은 매개변수 값에는 이전 호출의 값이 사용됩니다. true인 경우, 지정되지 않은 매개변수가 이전 호출에서 지정된 값을 덮어씁니다.
+
+**Returns:**
+이 호출을 나타내는 객체이며, 그 외에는 버려도 됩니다.
+
+***
+
+
+### <kbd>메서드</kbd> `Run.display`
+
+```python
+display(height: 'int' = 420, hidden: 'bool' = False) → bool
+```
+
+Jupyter에서 이 실행을 표시합니다.
+
+***
+
+
+### <kbd>method</kbd> `Run.finish`
+
+```python
+finish(exit_code: 'int | None' = None, quiet: 'bool | None' = None) → None
+```
+
+실행을 종료하고 남은 데이터를 모두 업로드합니다.
+
+W&amp;B 실행을 완료 상태로 표시하고, 모든 데이터가 서버와 동기화되었는지 확인합니다. 실행의 최종 상태는 종료 조건과 동기화 상태에 따라 결정됩니다.
+
+실행 상태:
+
+* Running: 데이터를 로깅하고/또는 하트비트를 전송 중인 활성 실행.
+* Crashed: 예기치 않게 하트비트 전송이 중단된 실행.
+* Finished: 모든 데이터가 동기화된 상태에서 (`exit_code=0`) 정상적으로 완료된 실행.
+* Failed: 오류가 발생한 채로 완료된 실행 (`exit_code!=0`).
+* Killed: 완료되기 전에 강제로 중지된 실행.
+
+**Args:**
+
+* `exit_code`: 실행의 종료 상태를 나타내는 정수입니다. 성공 시 0을 사용하고, 그 외의 값은 실행이 실패한 것으로 간주합니다.
+* `quiet`: 사용 중단(deprecated)되었습니다. 로깅 상세 수준은 `wandb.Settings(quiet=...)`을 사용해 설정하세요.
+
+***
+
+
+### <kbd>메서드</kbd> `Run.finish_artifact`
+
+```python
+finish_artifact(
+    artifact_or_path: 'Artifact | str',
+    name: 'str | None' = None,
+    type: 'str | None' = None,
+    aliases: 'list[str] | None' = None,
+    distributed_id: 'str | None' = None
+) → Artifact
+```
+
+실행의 출력으로 아직 완료되지 않은 아티팩트를 최종 완료합니다.
+
+동일한 분산 ID를 사용하는 이후의 &quot;업서트(upsert)&quot;는 새 버전을 생성합니다.
+
+**인자(Args):**
+
+* `artifact_or_path`:  이 아티팩트의 콘텐츠에 대한 경로로, 다음 형식 중 하나일 수 있습니다:
+  * `/local/directory`
+  * `/local/directory/file.txt`
+  * `s3://bucket/path`  또는 `wandb.Artifact`를 호출하여 생성한 아티팩트 객체를 전달할 수도 있습니다.
+* `name`:  아티팩트 이름입니다. `entity/project` 접두사가 붙을 수 있습니다. 유효한 이름 형식은 다음과 같습니다:
+  * name:version
+  * name:alias
+  * digest  지정하지 않으면, 현재 실행 ID가 앞에 붙은 경로의 기본 이름이 기본값으로 사용됩니다.
+* `type`:  로깅할 아티팩트 유형입니다. 예로는 `dataset`, `model` 등이 있습니다.
+* `aliases`:  이 아티팩트에 적용할 별칭 목록입니다. 기본값은 `["latest"]`입니다.
+* `distributed_id`:  모든 분산 작업이 공유하는 고유 문자열입니다. None인 경우, 실행의 그룹 이름이 기본값입니다.
+
+**반환값(Returns):**
+`Artifact` 객체를 반환합니다.
+
+***
+
+
+### <kbd>메서드</kbd> `Run.link_artifact`
+
+```python
+link_artifact(
+    artifact: 'Artifact',
+    target_path: 'str',
+    aliases: 'list[str] | None' = None
+) → Artifact
+```
+
+아티팩트를 컬렉션에 링크합니다.
+
+여기서 “링크(link)”란 W&amp;B가 아티팩트를 저장하는 위치와 레지스트리에서 해당 아티팩트에 접근 가능한 위치를 연결하는 포인터를 의미합니다. 아티팩트를 컬렉션에 링크해도 W&amp;B는 아티팩트를 복제하지 않습니다.
+
+지정한 컬렉션에 대해 Registry UI에서 링크된 아티팩트를 볼 수 있습니다.
+
+**Args:**
+
+* `artifact`:  컬렉션에 링크할 아티팩트 객체.
+* `target_path`:  컬렉션의 경로입니다. 경로는 접두사 &quot;wandb-registry-&quot;와 레지스트리 이름, 컬렉션 이름으로 구성됩니다: `wandb-registry-{REGISTRY_NAME}/{COLLECTION_NAME}`.
+* `aliases`:  링크된 아티팩트에 하나 이상의 별칭을 추가합니다. 가장 최근에 링크한 아티팩트에는 &quot;latest&quot; 별칭이 자동으로 적용됩니다.
+
+**Returns:**
+링크된 아티팩트.
+
+***
+
+
+### <kbd>메서드</kbd> `Run.link_model`
+
+```python
+link_model(
+    path: 'StrPath',
+    registered_model_name: 'str',
+    name: 'str | None' = None,
+    aliases: 'list[str] | None' = None
+) → Artifact | None
+```
+
+모델 아티팩트 버전을 로깅하고 모델 레지스트리에 등록된 모델에 연결합니다.
+
+연결된 모델 버전은 지정된 등록된 모델의 UI에서 확인할 수 있습니다.
+
+이 메서드는 다음을 수행합니다:
+
+* &#39;name&#39; 모델 아티팩트가 이미 로깅되었는지 확인합니다. 로깅된 경우, &#39;path&#39;에 있는 파일과 일치하는 아티팩트 버전을 사용하거나 새 버전을 로깅합니다. 로깅되지 않은 경우, &#39;path&#39; 아래의 파일을 유형이 &#39;model&#39;인 새 모델 아티팩트 &#39;name&#39;으로 로깅합니다.
+* &#39;model-registry&#39; 프로젝트에 이름이 &#39;registered&#95;model&#95;name&#39;인 등록된 모델이 존재하는지 확인합니다. 존재하지 않으면, 이름이 &#39;registered&#95;model&#95;name&#39;인 새 등록된 모델을 생성합니다.
+* 모델 아티팩트 &#39;name&#39;의 버전을 등록된 모델 &#39;registered&#95;model&#95;name&#39;에 연결합니다.
+* &#39;aliases&#39; 목록에 있는 별칭을 새로 연결된 모델 아티팩트 버전에 추가합니다.
+
+**Args:**
+
+* `path`:  (str) 이 모델의 내용을 가리키는 경로로, 다음과 같은 형태일 수 있습니다:
+  * `/local/directory`
+  * `/local/directory/file.txt`
+  * `s3://bucket/path`
+* `registered_model_name`:  이 모델이 연결될 등록된 모델의 이름입니다. 등록된 모델은 모델 레지스트리에 연결된 모델 버전들의 집합으로, 일반적으로 팀의 특정 ML 작업을 나타냅니다. 이 등록된 모델이 속한 엔터티는 실행으로부터 결정됩니다.
+* `name`:  &#39;path&#39;의 파일들이 로깅될 모델 아티팩트의 이름입니다. 지정하지 않으면, 경로의 베이스 이름 앞에 현재 실행 id가 붙은 값이 기본값으로 사용됩니다.
+* `aliases`:  등록된 모델 내부에서 이 연결된 아티팩트에만 적용될 별칭입니다. 별칭 &quot;latest&quot;는 항상 연결된 아티팩트의 최신 버전에 적용됩니다.
+
+**Raises:**
+
+* `AssertionError`:  registered&#95;model&#95;name이 경로인 경우, 또는 모델 아티팩트 &#39;name&#39;의 타입에 &#39;model&#39;이라는 부분 문자열이 포함되어 있지 않은 경우.
+* `ValueError`:  name에 유효하지 않은 특수 문자가 포함된 경우.
+
+**Returns:**
+연결에 성공하면 연결된 아티팩트를, 그렇지 않으면 `None`을 반환합니다.
+
+***
+
+
+### <kbd>method</kbd> `Run.log`
+
+```python
+log(
+    data: 'dict[str, Any]',
+    step: 'int | None' = None,
+    commit: 'bool | None' = None
+) → None
+```
+
+실행 데이터를 업로드합니다.
+
+`log`를 사용하여 실행에서 생성되는 스칼라, 이미지, 비디오, 히스토그램, 플롯, 테이블 등의 데이터를 기록하세요. 코드 스니펫, 모범 사례 등에 대해서는 [Log objects and media](https://docs.wandb.ai/guides/track/log)를 참고하세요.
+
+기본 사용 방법:
+
+```python
+import wandb
+
+with wandb.init() as run:
+     run.log({"train-loss": 0.5, "accuracy": 0.9})
+```
+
+이전 코드 스니펫은 손실(loss)과 정확도를 실행의 history에 저장하고, 이 지표들의 summary 값을 업데이트합니다.
+
+[wandb.ai](https://wandb.ai)의 워크스페이스에서 기록된 데이터를 시각화하거나, W&amp;B 앱의 [자가 호스팅 인스턴스](https://docs.wandb.ai/guides/hosting)에서 로컬로 시각화할 수 있습니다. 또는 데이터를 내보낸 뒤, [Public API](https://docs.wandb.ai/guides/track/public-api-guide)를 사용해 Jupyter 노트북 같은 로컬 환경에서 시각화하고 탐색할 수도 있습니다.
+
+기록되는 값은 반드시 스칼라 값일 필요는 없습니다. 이미지, 오디오, 비디오 등과 같이 [W&amp;B에서 지원하는 데이터 타입](https://docs.wandb.ai/ref/python/data-types/)은 무엇이든 기록할 수 있습니다. 예를 들어, `wandb.Table`을 사용해 구조화된 데이터를 기록할 수 있습니다. 자세한 내용은 [테이블 로깅, 데이터 시각화 및 쿼리](https://docs.wandb.ai/guides/models/tables/tables-walkthrough) 튜토리얼을 참고하세요.
+
+W&amp;B는 이름에 슬래시(`/`)가 포함된 지표를, 마지막 슬래시 앞의 텍스트를 섹션 이름으로 사용하여 섹션별로 정리합니다. 예를 들어, 다음 예시는 &quot;train&quot;과 &quot;validate&quot;라는 두 개의 섹션을 생성합니다:
+
+```python
+with wandb.init() as run:
+     # "train" 섹션에 메트릭을 기록합니다.
+     run.log(
+         {
+             "train/accuracy": 0.9,
+             "train/loss": 30,
+             "validate/accuracy": 0.8,
+             "validate/loss": 20,
+         }
+     )
+```
+
+중첩은 한 단계까지만 지원됩니다. `run.log({"a/b/c": 1})`은(는) &quot;a&quot;라는 섹션을 생성합니다.
+
+`run.log()`은(는) 초당 몇 차례보다 더 자주 호출하도록 설계되지 않았습니다. 최적의 성능을 위해, N번 반복마다 한 번씩만 로깅하거나 여러 반복 동안 데이터를 모은 후 한 번에 로깅하세요.
+
+기본적으로 `log`를 호출할 때마다 새로운 &quot;step&quot;이 생성됩니다. `step` 값은 항상 증가해야 하며, 이전 `step`에 로깅하는 것은 불가능합니다. 차트에서 X축으로는 어떤 지표든 사용할 수 있습니다. 자세한 내용은 [Custom log axes](https://docs.wandb.ai/guides/track/log/customize-logging-axes/)를 참고하세요.
+
+많은 경우, W&amp;B `step`을 학습 `step`이라기보다는 타임스탬프처럼 취급하는 것이 더 좋습니다.
+
+```python
+with wandb.init() as run:
+     # 예시: X축으로 사용할 "epoch" 메트릭을 기록합니다.
+     run.log({"epoch": 40, "train-loss": 0.5})
+```
+
+`step` 및 `commit` 매개변수를 사용하면 여러 번 `wandb.Run.log()`를 호출하더라도 동일한 step에 기록할 수 있습니다. 다음 예시는 모두 동일하게 동작합니다:
+
+```python
+with wandb.init() as run:
+     # 일반 사용법:
+     run.log({"train-loss": 0.5, "accuracy": 0.8})
+     run.log({"train-loss": 0.4, "accuracy": 0.9})
+
+     # 자동 증가 없는 암묵적 스텝:
+     run.log({"train-loss": 0.5}, commit=False)
+     run.log({"accuracy": 0.8})
+     run.log({"train-loss": 0.4}, commit=False)
+     run.log({"accuracy": 0.9})
+
+     # 명시적 스텝:
+     run.log({"train-loss": 0.5}, step=current_step)
+     run.log({"accuracy": 0.8}, step=current_step)
+     current_step += 1
+     run.log({"train-loss": 0.4}, step=current_step)
+     run.log({"accuracy": 0.9}, step=current_step, commit=True)
+```
+
+**매개변수:**
+
+
+* `data`:  `str` 키와 직렬화 가능한 값을 가지는 `dict`
+* `Python objects including`:  `int`, `float`, `string`; 모든 `wandb.data_types`; 직렬화 가능한 Python 객체의 리스트, 튜플, NumPy 배열; 이와 같은 구조의 다른 `dict`.
+* `step`:  로깅할 스텝 번호입니다. `None`이면 자동으로 증가하는 암시적 스텝이 사용됩니다. 자세한 내용은 아래 설명의 노트를 참고하세요.
+* `commit`:  true이면 스텝을 완료하고 업로드합니다. false이면 해당 스텝에 대한 데이터를 누적합니다. 자세한 내용은 아래 설명의 노트를 참고하세요. `step`이 `None`인 경우 기본값은 `commit=True`이고, 그렇지 않은 경우 기본값은 `commit=False`입니다.
+
+**예시:**
+더 많고 상세한 예시는 [로깅 가이드](https://docs.wandb.com/guides/track/log)를 참고하세요.
+
+기본 사용법
+
+```python
+import wandb
+
+with wandb.init() as run:
+    run.log({"train-loss": 0.5, "accuracy": 0.9
+```
+
+점진적 로깅
+
+```python
+import wandb
+
+with wandb.init() as run:
+    run.log({"loss": 0.2}, commit=False)
+    # 이 단계를 기록할 준비가 되면 다른 곳에서:
+    run.log({"accuracy": 0.8})
+```
+
+히스토그램
+
+```python
+import numpy as np
+import wandb
+
+# 정규 분포에서 무작위로 그래디언트 샘플링
+gradients = np.random.randn(100, 100)
+with wandb.init() as run:
+    run.log({"gradients": wandb.Histogram(gradients)})
+```
+
+이미지 출처: NumPy
+
+```python
+import numpy as np
+import wandb
+
+with wandb.init() as run:
+    examples = []
+    for i in range(3):
+         pixels = np.random.randint(low=0, high=256, size=(100, 100, 3))
+         image = wandb.Image(pixels, caption=f"random field {i}")
+         examples.append(image)
+    run.log({"examples": examples})
+```
+
+PIL 이미지
+
+```python
+import numpy as np
+from PIL import Image as PILImage
+import wandb
+
+with wandb.init() as run:
+    examples = []
+    for i in range(3):
+         pixels = np.random.randint(
+             low=0,
+             high=256,
+             size=(100, 100, 3),
+             dtype=np.uint8,
+         )
+         pil_image = PILImage.fromarray(pixels, mode="RGB")
+         image = wandb.Image(pil_image, caption=f"random field {i}")
+         examples.append(image)
+    run.log({"examples": examples})
+```
+
+NumPy 비디오
+
+```python
+import numpy as np
+import wandb
+
+with wandb.init() as run:
+    # 축은 (시간, 채널, 높이, 너비) 순입니다
+    frames = np.random.randint(
+         low=0,
+         high=256,
+         size=(10, 3, 100, 100),
+         dtype=np.uint8,
+    )
+    run.log({"video": wandb.Video(frames, fps=4)})
+```
+
+Matplotlib 플롯
+
+```python
+from matplotlib import pyplot as plt
+import numpy as np
+import wandb
+
+with wandb.init() as run:
+    fig, ax = plt.subplots()
+    x = np.linspace(0, 10)
+    y = x * x
+    ax.plot(x, y)  # y = x^2 그래프 그리기
+    run.log({"chart": fig})
+```
+
+정밀도-재현율(PR) 곡선
+
+```python
+import wandb
+
+with wandb.init() as run:
+    run.log({"pr": wandb.plot.pr_curve(y_test, y_probas, labels)})
+```
+
+3D 객체
+
+```python
+import wandb
+
+with wandb.init() as run:
+    run.log(
+         {
+             "generated_samples": [
+                 wandb.Object3D(open("sample.obj")),
+                 wandb.Object3D(open("sample.gltf")),
+                 wandb.Object3D(open("sample.glb")),
+             ]
+         }
+    )
+```
+
+**발생하는 예외:**
+
+* `wandb.Error`:  `wandb.init()`가 호출되기 전에 호출된 경우.
+* `ValueError`:  잘못된 데이터가 전달된 경우.
+
+***
+
+
+### <kbd>method</kbd> `Run.log_artifact`
+
+```python
+log_artifact(
+    artifact_or_path: 'Artifact | StrPath',
+    name: 'str | None' = None,
+    type: 'str | None' = None,
+    aliases: 'list[str] | None' = None,
+    tags: 'list[str] | None' = None
+) → Artifact
+```
+
+실행의 출력으로 아티팩트를 선언합니다.
+
+**Args:**
+
+* `artifact_or_path`:  (str 또는 Artifact) 이 아티팩트의 내용에 대한 경로로, 다음 형식일 수 있습니다:
+  * `/local/directory`
+  * `/local/directory/file.txt`
+  * `s3://bucket/path`  또한 `wandb.Artifact`를 호출해 생성한 Artifact 객체를 전달할 수도 있습니다.
+* `name`:  (str, 선택) 아티팩트 이름. 올바른 이름 형식은 다음과 같습니다:
+  * name:version
+  * name:alias
+  * digest  지정하지 않으면, 경로의 기본 이름(basename)에 현재 실행 id가 앞에 붙은 값이 기본값으로 사용됩니다.
+* `type`:  (str) 로깅할 아티팩트의 유형. 예: `dataset`, `model`
+* `aliases`:  (list, 선택) 이 아티팩트에 적용할 별칭. 기본값은 `["latest"]`입니다.
+* `tags`:  (list, 선택) 이 아티팩트에 적용할 태그(있는 경우).
+
+**Returns:**
+`Artifact` 객체.
+
+***
+
+
+### <kbd>method</kbd> `Run.log_code`
+
+```python
+log_code(
+    root: 'str | None' = '.',
+    name: 'str | None' = None,
+    include_fn: 'Callable[[str, str], bool] | Callable[[str], bool]' = <function _is_py_requirements_or_dockerfile at 0x109219da0>,
+    exclude_fn: 'Callable[[str, str], bool] | Callable[[str], bool]' = <function exclude_wandb_fn at 0x10a767e20>
+) → Artifact | None
+```
+
+현재 코드 상태를 W&amp;B 아티팩트로 저장합니다.
+
+기본적으로 현재 디렉터리를 순회하면서 `.py`로 끝나는 모든 파일을 로그합니다.
+
+**Args:**
+
+* `root`:  코드를 재귀적으로 찾을 기준이 되는 경로입니다. `os.getcwd()` 기준의 상대 경로나 절대 경로를 사용할 수 있습니다.
+* `name`:  (str, optional) 코드 아티팩트의 이름입니다. 기본적으로 아티팩트 이름은 `source-$PROJECT_ID-$ENTRYPOINT_RELPATH`가 됩니다. 여러 실행에서 동일한 아티팩트를 공유하고 싶은 경우가 있을 수 있습니다. `name`을 지정하면 이를 달성할 수 있습니다.
+* `include_fn`:  파일 경로와 (옵션으로) root 경로를 인자로 받아, 포함해야 하는 경우에는 `True`를, 그렇지 않은 경우에는 `False`를 반환하는 호출 가능 객체입니다. 이
+* `defaults to `lambda path, root`:  path.endswith(".py")`. 로 설정됩니다.
+* `exclude_fn`:  파일 경로와 (옵션으로) root 경로를 인자로 받아, 제외해야 하는 경우에는 `True`를, 그렇지 않은 경우에는 `False`를 반환하는 호출 가능 객체입니다. 기본값은 `<root>/.wandb/` 및 `<root>/wandb/` 디렉터리 내의 모든 파일을 제외하는 함수입니다.
+
+**Examples:**
+기본 사용법
+
+```python
+import wandb
+
+with wandb.init() as run:
+    run.log_code()
+```
+
+고급 사용법
+
+```python
+import wandb
+
+with wandb.init() as run:
+    run.log_code(
+         root="../",
+         include_fn=lambda path: path.endswith(".py") or path.endswith(".ipynb"),
+         exclude_fn=lambda path, root: os.path.relpath(path, root).startswith(
+             "cache/"
+         ),
+    )
+```
+
+**반환값:**
+코드가 로깅된 경우 `Artifact` 객체를 반환합니다.
+
+***
+
+
+### <kbd>method</kbd> `Run.log_model`
+
+```python
+log_model(
+    path: 'StrPath',
+    name: 'str | None' = None,
+    aliases: 'list[str] | None' = None
+) → None
+```
+
+&#39;path&#39; 안의 내용을 포함하는 모델 아티팩트를 실행에 로깅하고, 해당 실행의 출력으로 표시합니다.
+
+모델 아티팩트의 이름에는 영숫자, 밑줄, 하이픈만 사용할 수 있습니다.
+
+**Args:**
+
+* `path`:  (str) 이 모델의 내용에 대한 경로로, 다음 형식 중 하나일 수 있습니다:
+  * `/local/directory`
+  * `/local/directory/file.txt`
+  * `s3://bucket/path`
+* `name`:  파일 내용이 추가될 모델 아티팩트에 지정할 이름입니다. 지정하지 않으면 경로의 기본 이름 앞에 현재 실행 ID를 붙인 값이 기본값으로 사용됩니다.
+* `aliases`:  생성된 모델 아티팩트에 적용할 별칭입니다. 기본값은 `["latest"]`입니다.
+
+**Raises:**
+
+* `ValueError`:  `name`에 잘못된 특수 문자가 포함된 경우 발생합니다.
+
+**Returns:**
+None
+
+***
+
+
+### <kbd>메서드</kbd> `Run.mark_preempting`
+
+```python
+mark_preempting() → None
+```
+
+이 실행을 선점 중인 상태로 표시합니다.
+
+또한 내부 프로세스에 이 사실을 서버에 즉시 보고하도록 지시합니다.
+
+***
+
+
+### <kbd>메서드</kbd> `Run.restore`
+
+```python
+restore(
+    name: 'str',
+    run_path: 'str | None' = None,
+    replace: 'bool' = False,
+    root: 'str | None' = None
+) → None | TextIO
+```
+
+클라우드 스토리지에서 지정된 파일을 다운로드합니다.
+
+파일은 현재 디렉터리 또는 실행 디렉터리에 저장됩니다. 기본적으로 파일이 이미 존재하지 않는 경우에만 다운로드합니다.
+
+**인수:**
+
+* `name`:  파일 이름.
+* `run_path`:  파일을 가져올 실행의 선택적 경로. 예: `username/project_name/run_id`  wandb.init이 호출되지 않은 경우 필수입니다.
+* `replace`:  파일이 로컬에 이미 존재하더라도 다운로드할지 여부.
+* `root`:  파일을 다운로드할 디렉터리. 기본값은 현재 디렉터리이며, wandb.init이 호출된 경우 실행 디렉터리입니다.
+
+**반환값:**
+파일을 찾을 수 없으면 None, 그렇지 않으면 읽기용으로 열린 파일 객체를 반환합니다.
+
+**예외:**
+
+* `CommError`:  W&amp;B가 W&amp;B 백엔드에 연결할 수 없는 경우.
+* `ValueError`:  파일을 찾을 수 없거나 run&#95;path를 찾을 수 없는 경우.
+
+***
+
+
+### <kbd>method</kbd> `Run.save`
+
+```python
+save(
+    glob_str: 'str | os.PathLike',
+    base_path: 'str | os.PathLike | None' = None,
+    policy: 'PolicyName' = 'live'
+) → bool | list[str]
+```
+
+하나 이상의 파일을 W&amp;B로 동기화합니다.
+
+상대 경로는 현재 작업 디렉터리를 기준으로 해석됩니다.
+
+Unix glob(예: &quot;myfiles/*&quot;)은 `save`가 호출되는 시점에, `policy`와 관계없이 확장됩니다. 특히, 새로 생성된 파일은 자동으로 포함되지 않습니다.
+
+업로드된 파일의 디렉터리 구조를 제어하기 위해 `base_path`를 제공할 수 있습니다. 이는 `glob_str`의 접두어여야 하며, 그 아래의 디렉터리 구조는 그대로 유지됩니다.
+
+절대 경로나 glob이 주어졌고 `base_path`가 없을 때는, 위 예시와 같이 한 단계의 디렉터리 계층이 유지됩니다.
+
+파일은 자동으로 중복 제거됩니다. 변경 없이 동일한 파일에 대해 `save()`를 여러 번 호출해도 다시 업로드되지 않습니다.
+
+**Args:**
+
+* `glob_str`:  상대 또는 절대 경로, 혹은 Unix glob.
+* `base_path`:  디렉터리 구조를 유추하는 데 사용할 경로입니다. 예시를 참조하세요.
+* `policy`:  `live`, `now`, `end` 중 하나.
+  * live: 파일이 변경될 때마다 업로드하며, 이전 버전을 덮어씁니다.
+  * now: 지금 한 번만 파일을 업로드합니다.
+  * end: 실행이 종료될 때 파일을 업로드합니다.
+
+**Returns:**
+매칭된 파일에 대해 생성된 심볼릭 링크의 경로.
+
+기존 코드와의 호환성 때문에, 불리언 값을 반환할 수도 있습니다.
+
+```python
+import wandb
+
+run = wandb.init()
+
+run.save("these/are/myfiles/*")
+# => 실행의 "these/are/myfiles/" 폴더에 파일을 저장합니다.
+
+run.save("these/are/myfiles/*", base_path="these")
+# => 실행의 "are/myfiles/" 폴더에 파일을 저장합니다.
+
+run.save("/Users/username/Documents/run123/*.txt")
+# => 실행의 "run123/" 폴더에 파일을 저장합니다. 아래 참고 사항을 확인하세요.
+
+run.save("/Users/username/Documents/run123/*.txt", base_path="/Users")
+# => 실행의 "username/Documents/run123/" 폴더에 파일을 저장합니다.
+
+run.save("files/*/saveme.txt")
+# => "files/"의 적절한 하위 디렉터리에 각 "saveme.txt" 파일을 저장합니다.
+
+# 컨텍스트 매니저를 사용하지 않으므로 실행을 명시적으로 종료합니다.
+run.finish()
+```
+
+***
+
+
+### <kbd>method</kbd> `Run.status`
+
+```python
+status() → RunStatus
+```
+
+내부 백엔드에서 현재 실행의 동기화 상태 정보를 가져옵니다.
+
+***
+
+
+### <kbd>메서드</kbd> `Run.unwatch`
+
+```python
+unwatch(
+    models: 'torch.nn.Module | Sequence[torch.nn.Module] | None' = None
+) → None
+```
+
+pytorch 모델 토폴로지, 그래디언트 및 파라미터 훅을 제거합니다.
+
+**Args:**
+
+* `models`:  watch가 호출된 pytorch 모델의 선택적 목록입니다.
+
+***
+
+
+### <kbd>메서드</kbd> `Run.upsert_artifact`
+
+```python
+upsert_artifact(
+    artifact_or_path: 'Artifact | str',
+    name: 'str | None' = None,
+    type: 'str | None' = None,
+    aliases: 'list[str] | None' = None,
+    distributed_id: 'str | None' = None
+) → Artifact
+```
+
+실행의 출력으로, 아직 최종 확정되지 않은(non-finalized) 아티팩트를 새로 선언하거나 기존 아티팩트를 추가로 지정합니다.
+
+아티팩트를 최종 확정하려면 반드시 `run.finish_artifact()`를 호출해야 합니다. 이는 분산 작업들이 모두 동일한 아티팩트에 기여해야 할 때 유용합니다.
+
+**Args:**
+
+* `artifact_or_path`:  이 아티팩트의 내용을 가리키는 경로로, 다음과 같은 형식일 수 있습니다:
+  * `/local/directory`
+  * `/local/directory/file.txt`
+  * `s3://bucket/path`
+* `name`:  아티팩트 이름입니다. `"entity/project"` 접두사가 붙을 수 있습니다. 지정하지 않으면, 경로의 basename 앞에 현재 실행 ID를 붙인 값이 기본값입니다. 유효한 이름 형식은 다음과 같습니다:
+  * name:version
+  * name:alias
+  * digest
+* `type`:  로깅할 아티팩트 유형입니다. 흔한 예로는 `dataset`, `model` 등이 있습니다.
+* `aliases`:  이 아티팩트에 적용할 별칭 목록으로, 기본값은 `["latest"]`입니다.
+* `distributed_id`:  모든 분산 작업이 공유하는 고유 문자열입니다. `None`인 경우 실행의 그룹 이름이 기본값입니다.
+
+**Returns:**
+`Artifact` 객체를 반환합니다.
+
+***
+
+
+### <kbd>method</kbd> `Run.use_artifact`
+
+```python
+use_artifact(
+    artifact_or_name: 'str | Artifact',
+    type: 'str | None' = None,
+    aliases: 'list[str] | None' = None,
+    use_as: 'str | None' = None
+) → Artifact
+```
+
+실행의 입력 아티팩트를 선언합니다.
+
+반환된 객체에서 `download` 또는 `file`을 호출하여 로컬에서 내용을 가져옵니다.
+
+**인자:**
+
+* `artifact_or_name`:  사용할 아티팩트의 이름입니다. 아티팩트가 기록된 프로젝트 이름을 접두사로 붙일 수 있습니다(&quot;entity&quot; 또는 &quot;entity/project&quot;). 이름에 엔터티가 지정되지 않으면 실행 또는 API 설정의 엔터티가 사용됩니다. 유효한 이름 형식은 다음과 같습니다.
+  * name:version
+  * name:alias
+* `type`:  사용할 아티팩트의 타입입니다.
+* `aliases`:  이 아티팩트에 적용할 별칭입니다.
+* `use_as`:  지원 중단된 인자로, 아무 동작도 하지 않습니다.
+
+**반환값:**
+`Artifact` 객체.
+
+**예시:**
+
+```python
+import wandb
+
+run = wandb.init(project="<example>")
+
+# 이름과 별칭으로 아티팩트 사용
+artifact_a = run.use_artifact(artifact_or_name="<name>:<alias>")
+
+# 이름과 버전으로 아티팩트 사용
+artifact_b = run.use_artifact(artifact_or_name="<name>:v<version>")
+
+# 엔터티/프로젝트/이름:별칭으로 아티팩트 사용
+artifact_c = run.use_artifact(
+    artifact_or_name="<entity>/<project>/<name>:<alias>"
+)
+
+# 엔터티/프로젝트/이름:버전으로 아티팩트 사용
+artifact_d = run.use_artifact(
+    artifact_or_name="<entity>/<project>/<name>:v<version>"
+)
+
+# 컨텍스트 매니저를 사용하지 않으므로 실행을 명시적으로 종료합니다.
+run.finish()
+```
+
+***
+
+
+### <kbd>메서드</kbd> `Run.use_model`
+
+```python
+use_model(name: 'str') → FilePathStr
+```
+
+모델 아티팩트 &#39;name&#39;에 로깅된 파일을 다운로드합니다.
+
+**Args:**
+
+* `name`:  모델 아티팩트 이름입니다. &#39;name&#39;은 이미 로깅된 기존 모델 아티팩트의 이름과 일치해야 합니다. `entity/project/`를 접두사로 붙일 수 있습니다. 유효한 이름 형식은 다음과 같습니다.
+  * model&#95;artifact&#95;name:version
+  * model&#95;artifact&#95;name:alias
+
+**Returns:**
+
+* `path` (str):  다운로드된 모델 아티팩트 파일의 경로입니다.
+
+**Raises:**
+
+* `AssertionError`:  모델 아티팩트 &#39;name&#39;의 타입에 &#39;model&#39;이라는 부분 문자열이 포함되지 않는 경우 발생합니다.
+
+***
+
+
+### <kbd>method</kbd> `Run.watch`
+
+```python
+watch(
+    models: 'torch.nn.Module | Sequence[torch.nn.Module]',
+    criterion: 'torch.F | None' = None,
+    log: "Literal['gradients', 'parameters', 'all'] | None" = 'gradients',
+    log_freq: 'int' = 1000,
+    idx: 'int | None' = None,
+    log_graph: 'bool' = False
+) → None
+```
+
+주어진 PyTorch 모델에 hook을 설정해 그래디언트와 모델의 연산 그래프를 모니터링합니다.
+
+이 함수는 학습 중 파라미터, 그래디언트, 또는 둘 다를 추적할 수 있습니다.
+
+**Args:**
+
+* `models`:  모니터링할 단일 모델 또는 여러 모델의 시퀀스.
+* `criterion`:  최적화 중인 손실 함수 (선택 사항).
+* `log`:  &quot;gradients&quot;, &quot;parameters&quot;, 또는 &quot;all&quot; 중 무엇을 로깅할지 지정합니다. 로깅을 비활성화하려면 None으로 설정합니다. (default=&quot;gradients&quot;)
+* `log_freq`:  그래디언트와 파라미터를 로깅하는 빈도(배치 단위). (default=1000)
+* `idx`:  여러 모델을 `wandb.watch`로 추적할 때 사용하는 인덱스. (default=None)
+* `log_graph`:  모델의 연산 그래프를 로깅할지 여부. (default=False)
+
+**Raises:**
+ValueError:  `wandb.init()`이 호출되지 않았거나, 모델 중 하나라도 `torch.nn.Module`의 인스턴스가 아닌 경우.

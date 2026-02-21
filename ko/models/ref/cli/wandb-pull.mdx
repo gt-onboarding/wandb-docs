@@ -1,0 +1,45 @@
+---
+title: "wandb pull"
+---
+
+{/*
+  이 명령어에 대한 소개 내용을 추가하려면:
+  1. /snippets/en/_includes/cli/wandb-pull.mdx 위치에 스니펫 파일을 생성합니다.
+  2. 해당 파일에 소개 내용을 추가합니다.
+  3. 이 전체 주석 블록을 삭제하고 아래 두 줄만 남겨 둡니다:
+
+  import WandbPull from "/snippets/_includes/cli/wandb-pull.mdx";
+
+  <WandbPull/>
+
+  스니펫은 다음 번 재생성 시 자동으로 감지됩니다.
+  */}
+
+Weights &amp; Biases에서 파일 가져오기
+
+
+<div id="usage">
+  ## 사용 방법
+</div>
+
+```bash
+wandb pull RUN [OPTIONS]
+```
+
+
+<div id="arguments">
+  ## 인수
+</div>
+
+| 인수 | 설명 | 필수 여부 |
+| :--- | :--- | :--- |
+| `RUN` | 설명 없음 | 예 |
+
+<div id="options">
+  ## 옵션
+</div>
+
+| 옵션 | 설명 |
+| :--- | :--- |
+| `--project`, `-p` | 다운로드할 프로젝트입니다. |
+| `--entity`, `-e` | 목록 범위를 지정할 엔터티입니다. (기본값: models) |

@@ -1,0 +1,71 @@
+---
+description: Azure OpenAI 모델을 W&B로 파인튜닝하는 방법.
+title: Azure OpenAI 파인튜닝
+---
+
+<div id="introduction">
+  ## 소개
+</div>
+
+Microsoft Azure에서 W&B를 사용해 GPT-3.5 또는 GPT-4 모델을 파인튜닝하면, 메트릭을 자동으로 수집하고 W&B의 실험 추적 및 평가 도구를 통해 체계적으로 평가하여 모델 성능을 추적·분석하고 개선할 수 있습니다.
+
+<Frame>
+    <img src="/images/integrations/aoai_ft_plot.png" alt="Azure OpenAI 파인튜닝 메트릭"  />
+</Frame>
+
+<div id="prerequisites">
+  ## 사전 준비 사항
+</div>
+
+- [공식 Azure 문서](https://wandb.me/aoai-wb-int)를 참고해 Azure OpenAI 서비스를 설정합니다.
+- W&B 계정을 생성하고 API key를 설정합니다.
+
+<div id="workflow-overview">
+  ## 워크플로우 개요
+</div>
+
+<div id="1-fine-tuning-setup">
+  ### 1. 파인튜닝 설정
+</div>
+
+- Azure OpenAI 요구 사항에 따라 학습 데이터를 준비합니다.
+- Azure OpenAI에서 파인튜닝 작업을 구성합니다.
+- W&B가 파인튜닝 프로세스를 자동으로 추적하고, 지표와 하이퍼파라미터를 기록합니다.
+
+<div id="2-experiment-tracking">
+  ### 2. 실험 추적
+</div>
+
+파인튜닝 중 W&B는 다음 항목을 기록합니다:
+
+- 학습 및 검증 지표
+- 모델 하이퍼파라미터
+- 리소스 사용량
+- 학습 아티팩트
+
+<div id="3-model-evaluation">
+  ### 3. 모델 평가
+</div>
+
+파인튜닝 후 [W&B Weave](https://weave-docs.wandb.ai)를 사용해 다음을 수행합니다:
+
+- 기준 데이터셋을 사용한 모델 출력 평가
+- 서로 다른 파인튜닝 실행 간 성능 비교
+- 특정 테스트 케이스에서의 모델 동작 분석
+- 모델 선택을 위한 데이터 기반 의사결정
+
+<div id="real-world-example">
+  ## 실제 사례
+</div>
+
+* 이 통합이 어떻게 다음을 가능하게 하는지 확인하려면 [의료 노트 생성 데모](https://wandb.me/aoai-ft-colab)를 살펴보세요.
+  - 파인튜닝 실험의 체계적인 추적
+  - 도메인 특화 지표를 활용한 모델 평가
+* [노트북 파인튜닝 대화형 데모](https://colab.research.google.com/github/wandb/examples/blob/master/colabs/azure/azure_gpt_medical_notes.ipynb)를 단계별로 따라가 보세요.
+
+<div id="additional-resources">
+  ## 추가 리소스
+</div>
+
+- [Azure OpenAI W&B 통합 가이드](https://wandb.me/aoai-wb-int)
+- [Azure OpenAI 파인튜닝 문서](https://learn.microsoft.com/azure/ai-services/openai/how-to/fine-tuning?tabs=turbo%2Cpython&pivots=programming-language-python)

@@ -1,0 +1,9 @@
+---
+title: 내 스윕이 로컬에 로그를 기록하는 디렉터리를 어떻게 변경할 수 있나요?
+---
+
+환경 변수 `WANDB_DIR`를 설정하여 W&amp;B 실행 데이터의 로그 디렉터리를 지정하세요. 예를 들면 다음과 같습니다:
+
+```python
+os.environ["WANDB_DIR"] = os.path.abspath("your/directory")
+```

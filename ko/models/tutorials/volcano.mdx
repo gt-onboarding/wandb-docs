@@ -1,0 +1,196 @@
+---
+title: Volcano로 멀티노드 작업 실행하기
+---
+
+이 튜토리얼에서는 Kubernetes에서 W&amp;B와 Volcano를 사용하여 멀티노드 학습 작업을 실행하는 방법을 안내합니다.
+
+<div id="overview">
+  ## 개요
+</div>
+
+이 튜토리얼에서는 W&amp;B Launch를 사용하여 Kubernetes에서 멀티 노드 작업을 실행하는 방법을 알아봅니다. 다음 단계를 따라 진행합니다:
+
+* W&amp;B 계정과 Kubernetes 클러스터를 가지고 있는지 확인합니다.
+* Volcano 작업을 위한 Launch 큐를 생성합니다.
+* Kubernetes 클러스터에 Launch 에이전트를 배포합니다.
+* 분산 학습 작업을 생성합니다.
+* 분산 학습을 실행합니다.
+
+<div id="prerequisites">
+  ## 사전 준비 사항
+</div>
+
+시작하기 전에 다음이 필요합니다:
+
+* W&amp;B 계정
+* Kubernetes 클러스터
+
+<div id="create-a-launch-queue">
+  ## Launch 큐 생성하기
+</div>
+
+첫 번째 단계는 Launch 큐를 생성하는 것입니다. [wandb.ai/launch](https://wandb.ai/launch)로 이동한 다음 화면 오른쪽 상단에서 파란색 **Create a queue** 버튼을 클릭합니다. 화면 오른쪽에서 큐 생성 드로어가 슬라이드되어 나타납니다. 엔터티를 선택하고 이름을 입력한 뒤, 큐의 유형으로 **Kubernetes**를 선택합니다.
+
+Configuration 섹션에서는 [volcano job](https://volcano.sh/en/docs/vcjob/) 템플릿을 입력합니다. 이 큐에서 실행되는 모든 실행은 이 job 스펙을 사용해 생성되므로, 작업을 원하는 대로 커스터마이즈할 수 있도록 이 구성을 수정할 수 있습니다.
+
+이 configuration 블록에는 Kubernetes job 스펙, Volcano job 스펙, 또는 실행하려는 기타 Custom Resource Definition(CRD)을 입력할 수 있습니다. [configuration 블록의 매크로](/ko/platform/launch/set-up-launch/)를 사용하여 이 스펙의 내용을 동적으로 설정할 수 있습니다.
+
+이 튜토리얼에서는 [volcano의 PyTorch 플러그인](https://github.com/volcano-sh/volcano/blob/master/docs/user-guide/how_to_use_pytorch_plugin)을 사용하는 멀티 노드 PyTorch 학습용 구성을 사용합니다. 아래 설정을 YAML 또는 JSON 형식으로 복사하여 붙여넣을 수 있습니다:
+
+<Tabs>
+  <Tab title="YAML">
+    ```yaml
+    kind: Job
+    spec:
+      tasks:
+        - name: master
+          policies:
+            - event: TaskCompleted
+              action: CompleteJob
+          replicas: 1
+          template:
+            spec:
+              containers:
+                - name: master
+                  image: ${image_uri}
+                  imagePullPolicy: IfNotPresent
+              restartPolicy: OnFailure
+        - name: worker
+          replicas: 1
+          template:
+            spec:
+              containers:
+                - name: worker
+                  image: ${image_uri}
+                  workingDir: /home
+                  imagePullPolicy: IfNotPresent
+              restartPolicy: OnFailure
+      plugins:
+        pytorch:
+          - --master=master
+          - --worker=worker
+          - --port=23456
+      minAvailable: 1
+      schedulerName: volcano
+    metadata:
+      name: wandb-job-${run_id}
+      labels:
+        wandb_entity: ${entity_name}
+        wandb_project: ${project_name}
+      namespace: wandb
+    apiVersion: batch.volcano.sh/v1alpha1
+    ```
+  </Tab>
+
+  <Tab title="JSON">
+    ```json
+    {
+      "kind": "Job",
+      "spec": {
+        "tasks": [
+          {
+            "name": "master",
+            "policies": [
+              {
+                "event": "TaskCompleted",
+                "action": "CompleteJob"
+              }
+            ],
+            "replicas": 1,
+            "template": {
+              "spec": {
+                "containers": [
+                  {
+                    "name": "master",
+                    "image": "${image_uri}",
+                    "imagePullPolicy": "IfNotPresent"
+                  }
+                ],
+                "restartPolicy": "OnFailure"
+              }
+            }
+          },
+          {
+            "name": "worker",
+            "replicas": 1,
+            "template": {
+              "spec": {
+                "containers": [
+                  {
+                    "name": "worker",
+                    "image": "${image_uri}",
+                    "workingDir": "/home",
+                    "imagePullPolicy": "IfNotPresent"
+                  }
+                ],
+                "restartPolicy": "OnFailure"
+              }
+            }
+          }
+        ],
+        "plugins": {
+          "pytorch": [
+            "--master=master",
+            "--worker=worker",
+            "--port=23456"
+          ]
+        },
+        "minAvailable": 1,
+        "schedulerName": "volcano"
+      },
+      "metadata": {
+        "name": "wandb-job-${run_id}",
+        "labels": {
+          "wandb_entity": "${entity_name}",
+          "wandb_project": "${project_name}"
+        },
+        "namespace": "wandb"
+      },
+      "apiVersion": "batch.volcano.sh/v1alpha1"
+    }
+    ```
+  </Tab>
+</Tabs>
+
+드로어 하단의 **Create queue** 버튼을 클릭해 큐 생성을 완료합니다.
+
+<div id="install-volcano">
+  ## Volcano 설치
+</div>
+
+Kubernetes 클러스터에 Volcano를 설치하려면 [공식 설치 가이드](https://volcano.sh/en/docs/installation/)를 따르십시오.
+
+<div id="deploy-your-launch-agent">
+  ## Launch 에이전트 배포하기
+</div>
+
+이제 큐를 생성했으므로, 큐에서 작업을 가져와 실행할 Launch 에이전트를 배포해야 합니다. 이를 수행하는 가장 쉬운 방법은 [W&amp;B의 공식 `helm-charts` 리포지토리의 `launch-agent` 차트](https://github.com/wandb/helm-charts/tree/main/charts/launch-agent)를 사용하는 것입니다. README의 안내에 따라 해당 차트를 Kubernetes 클러스터에 설치하고, 앞서 생성한 큐를 주기적으로 조회(polling)하도록 에이전트를 반드시 설정하세요.
+
+<div id="create-a-training-job">
+  ## 학습 잡 생성하기
+</div>
+
+Volcano의 PyTorch 플러그인은 PyTorch 코드에서 DDP를 올바르게 사용하는 경우 `MASTER_ADDR`, `RANK`, `WORLD_SIZE`와 같이 PyTorch DDP가 동작하는 데 필요한 환경 변수를 자동으로 설정합니다. 사용자 정의 Python 코드에서 DDP를 사용하는 방법에 대한 자세한 내용은 [PyTorch 문서](https://pytorch.org/tutorials/intermediate/ddp_tutorial.html)를 참고하세요.
+
+<Note>
+  Volcano의 PyTorch 플러그인은 [PyTorch Lightning `Trainer`를 통한 멀티 노드 학습](https://lightning.ai/docs/pytorch/stable/common/trainer.html#num-nodes)에도 호환됩니다.
+</Note>
+
+<div id="launch">
+  ## Launch
+</div>
+
+이제 큐와 클러스터 설정이 완료되었으므로, 분산 학습을 실행해 보겠습니다. 먼저 [하나의 job](https://wandb.ai/wandb/multinodetest/jobs/QXJ0aWZhY3RDb2xsZWN0aW9uOjc3MDcwNTg1/runs/latest)을 사용해 volcano의 PyTorch 플러그인으로 랜덤 데이터에 대해 간단한 멀티레이어 퍼셉트론을 학습합니다. 이 job의 소스 코드는 [여기](https://github.com/wandb/launch-jobs/tree/main/jobs/distributed_test)에서 확인할 수 있습니다.
+
+이 job을 실행하려면 [job 페이지](https://wandb.ai/wandb/multinodetest/jobs/QXJ0aWZhY3RDb2xsZWN0aW9uOjc3MDcwNTg1/runs/latest)로 이동한 후, 화면 오른쪽 상단에 있는 **Launch** 버튼을 클릭합니다. 그러면 job을 실행할 큐를 선택하라는 프롬프트가 표시됩니다.
+
+<Frame>
+  <img src="/images/launch/launching_multinode_job.png" alt="Multi-node job launch" />
+</Frame>
+
+1. job 파라미터를 원하는 대로 설정합니다.
+2. 앞에서 생성한 큐를 선택합니다.
+3. **Resource config** 섹션에서 volcano job을 수정해 job의 파라미터를 변경합니다. 예를 들어 `worker` 태스크의 `replicas` 필드를 변경하여 워커 수를 조정할 수 있습니다.
+4. **Launch**를 클릭합니다.
+
+W&amp;B UI에서 진행 상황을 모니터링하고, 필요할 경우 job을 중지할 수 있습니다.

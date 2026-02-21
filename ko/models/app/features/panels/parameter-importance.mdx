@@ -1,0 +1,80 @@
+---
+description: 모델의 하이퍼파라미터와 출력 지표 간의 관계를 시각화합니다
+title: 파라미터 중요도
+---
+
+모델의 하이퍼파라미터 중 어떤 것이 지표의 바람직한 값과 가장 강하게 상관되며, 성능을 가장 잘 예측하는지 파악할 수 있습니다.
+
+<Frame>
+  <img src="/images/general/parameter-importance-1.png" alt="Parameter importance panel" />
+</Frame>
+
+**상관관계(Correlation)** 는 하이퍼파라미터와 선택한 지표(이 예에서는 val&#95;loss) 간의 선형 상관관계를 의미합니다. 상관계수가 높다는 것은 하이퍼파라미터 값이 커질 때 지표 값도 함께 커지고, 그 반대도 성립한다는 뜻입니다. 상관관계는 확인하기 좋은 지표이지만, 입력값들 간의 2차 상호작용을 포착하지 못하고, 범위가 크게 다른 입력값들을 비교할 때는 해석이 복잡해질 수 있습니다.
+
+이러한 한계를 보완하기 위해 W&amp;B는 **중요도(importance)** 지표도 함께 계산합니다. W&amp;B는 하이퍼파라미터들을 입력으로, 지표를 목표 출력으로 사용해 랜덤 포레스트를 학습시키고, 이 랜덤 포레스트의 특성 중요도(feature importance) 값을 보고합니다.
+
+이 기법의 아이디어는 [Fast.ai](https://fast.ai)에서 하이퍼파라미터 공간을 탐색하기 위해 랜덤 포레스트 특성 중요도를 선도적으로 활용한 [Jeremy Howard](https://twitter.com/jeremyphoward) 와의 대화에서 영감을 얻었습니다. W&amp;B는 이 분석 방식의 동기를 더 잘 이해하고 싶다면 이 [강의](https://course18.fast.ai/lessonsml1/lesson4.html)와 이 [노트](https://forums.fast.ai/t/wiki-lesson-thread-lesson-4/7540)를 꼭 참고해 보시길 권장합니다.
+
+하이퍼파라미터 중요도 패널은 서로 높은 상관관계를 가진 하이퍼파라미터들 사이의 복잡한 상호작용을 풀어서 보여줍니다. 이를 통해 모델 성능을 예측하는 데 가장 중요한 하이퍼파라미터가 무엇인지 보여주어, 하이퍼파라미터 탐색을 더욱 정밀하게 조정할 수 있도록 도와줍니다.
+
+<div id="creating-a-hyperparameter-importance-panel">
+  ## 하이퍼파라미터 중요도 패널 생성하기
+</div>
+
+1. W&amp;B 프로젝트로 이동합니다.
+2. **Add panels** 버튼을 클릭합니다.
+3. **CHARTS** 드롭다운을 펼친 뒤, **Parallel coordinates**를 선택합니다.
+
+<Note>
+  빈 패널이 나타나면 실행이 그룹 해제(ungrouped) 상태인지 확인하세요.
+</Note>
+
+<Frame>
+  <img src="/images/app_ui/hyperparameter_importance_panel.gif" alt="Automatic parameter visualization" />
+</Frame>
+
+파라미터 관리자를 사용하면 표시할 파라미터와 숨길 파라미터를 수동으로 설정할 수 있습니다.
+
+<Frame>
+  <img src="/images/app_ui/hyperparameter_importance_panel_manual.gif" alt="Manually setting the visible and hidden fields" />
+</Frame>
+
+<div id="interpreting-a-hyperparameter-importance-panel">
+  ## 하이퍼파라미터 중요도 패널 해석하기
+</div>
+
+<Frame>
+  <img src="/images/general/parameter-importance-4.png" alt="특성 중요도 분석" />
+</Frame>
+
+이 패널에는 학습 스크립트에서 [wandb.Run.config](/ko/models/track/config/) 객체로 전달된 모든 파라미터가 표시됩니다. 또한 선택한 모델 지표(여기서는 `val_loss`)에 대해 이러한 config 파라미터의 특성 중요도와 상관관계를 보여줍니다.
+
+<div id="importance">
+  ### 중요도
+</div>
+
+`importance` 열은 각 하이퍼파라미터가 선택한 메트릭을 예측하는 데 얼마나 기여했는지를 보여줍니다. 수많은 하이퍼파라미터를 튜닝하기 시작한 뒤, 이 플롯을 사용해 어떤 하이퍼파라미터를 추가로 탐색할 가치가 있는지 좁혀 나가는 상황을 떠올려 보십시오. 이후 sweep에서는 가장 중요한 하이퍼파라미터로만 범위를 제한해 더 빠르고 저렴하게 더 나은 모델을 찾을 수 있습니다.
+
+<Note>
+  W&amp;B는 선형 모델이 아니라 트리 기반 모델을 사용해 중요도를 계산합니다. 트리 기반 모델은 범주형 데이터와 정규화되지 않은 데이터를 모두 더 잘 처리합니다.
+</Note>
+
+앞선 이미지에서 `epochs, learning_rate, batch_size` 그리고 `weight_decay`가 상당히 중요한 하이퍼파라미터였음을 알 수 있습니다.
+
+<div id="correlations">
+  ### 상관관계
+</div>
+
+상관관계는 개별 하이퍼파라미터와 메트릭 값 사이의 선형 관계를 포착합니다. 이는 SGD optimizer와 같은 특정 하이퍼파라미터를 사용할 때와 `val_loss` 사이에 유의미한 관계가 있는지 (이 경우에는 예라고 할 수 있습니다)라는 질문에 답합니다. 상관계수 값은 -1에서 1 사이이며, 양수는 양의 선형 상관관계를, 음수는 음의 선형 상관관계를, 0은 상관관계가 없음을 나타냅니다. 일반적으로 어느 한쪽 방향으로 0.7을 초과하는 값은 강한 상관관계가 있다고 봅니다.
+
+이 그래프를 활용해 메트릭과 더 높은 상관관계를 갖는 값들을 추가로 탐색할 수 있습니다 (예를 들어 이 경우 rmsprop이나 nadam 대신 stochastic gradient descent 또는 adam을 선택하거나, 더 많은 epoch 동안 학습하는 것을 고려할 수 있습니다).
+
+<Note>
+  * 상관관계는 인과관계를 보여주는 것이 아니라, 연관성의 증거만을 보여줍니다.
+  * 상관관계는 이상치에 민감하므로, 특히 시도한 하이퍼파라미터의 샘플 수가 적을 때 강한 관계를 중간 정도의 관계로 보이게 만들 수 있습니다.
+  * 마지막으로, 상관관계는 하이퍼파라미터와 메트릭 사이의 선형 관계만을 포착합니다. 강한 다항식 관계가 존재하더라도, 상관관계만으로는 포착되지 않습니다.
+</Note>
+
+중요도와 상관관계 사이의 차이는, 중요도는 하이퍼파라미터들 간 상호작용을 고려하는 반면 상관관계는 개별 하이퍼파라미터가 메트릭 값에 미치는 영향만을 측정한다는 점에서 비롯됩니다. 둘째로, 상관관계는 선형 관계만을 포착하는 반면 중요도는 더 복잡한 관계까지 포착할 수 있습니다.
+
+보시다시피 중요도와 상관관계는 모두 하이퍼파라미터가 모델 성능에 어떤 영향을 미치는지 이해하는 데 매우 유용한 도구입니다.

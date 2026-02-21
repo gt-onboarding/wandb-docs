@@ -1,0 +1,335 @@
+---
+title: 실행
+---
+
+<div id="chainable-ops">
+  ## 연결 가능한 op
+</div>
+
+### <a id="run-config" />`run-config`
+
+[실행](/ko/models/ref/query-panel/run)의 config &#95;TypedDict&#95;를 반환합니다.
+
+| Argument | Description |
+| :--- | :--- |
+| `run` | [실행](/ko/models/ref/query-panel/run) |
+
+<div id="return-value">
+  #### 반환 값
+</div>
+
+[실행](/ko/models/ref/query-panel/run)의 config *typedDict*
+
+### <a id="run-createdAt" />`run-createdAt`
+
+[실행](/ko/models/ref/query-panel/run)이 생성된 날짜와 시간(datetime)을 반환합니다.
+
+| Argument | Description |
+| :--- | :--- |
+| `run` | [실행](/ko/models/ref/query-panel/run) |
+
+<div id="return-value">
+  #### 반환 값
+</div>
+
+[실행](/ko/models/ref/query-panel/run)이 생성된 날짜와 시간(datetime)
+
+### <a id="run-heartbeatAt" />`run-heartbeatAt`
+
+[실행](/ko/models/ref/query-panel/run)의 마지막 하트비트 날짜/시간을 반환합니다.
+
+| 인자 | 설명 |
+| :--- | :--- |
+| `run` | [실행](/ko/models/ref/query-panel/run) |
+
+<div id="return-value">
+  #### 반환 값
+</div>
+
+[실행](/ko/models/ref/query-panel/run)의 마지막 하트비트 시각
+
+### <a id="run-history" />`run-history`
+
+[실행](/ko/models/ref/query-panel/run)의 로그 기록을 반환합니다.
+
+| Argument | Description |
+| :--- | :--- |
+| `run` | [실행](/ko/models/ref/query-panel/run) |
+
+<div id="return-value">
+  #### 반환 값
+</div>
+
+[실행](/ko/models/ref/query-panel/run)의 로그 이력
+
+### <a id="run-jobType" />`run-jobType`
+
+[실행](/ko/models/ref/query-panel/run)의 작업 유형을 반환합니다.
+
+| Argument | Description |
+| :--- | :--- |
+| `run` | [실행](/ko/models/ref/query-panel/run) |
+
+<div id="return-value">
+  #### 반환 값
+</div>
+
+[실행](/ko/models/ref/query-panel/run)의 job 유형
+
+### <a id="run-loggedArtifactVersion" />`run-loggedArtifactVersion`
+
+지정한 name과 alias에 대해 [실행](/ko/models/ref/query-panel/run)이 로깅한 [artifactVersion](/ko/models/ref/query-panel/artifact-version/)을 반환합니다.
+
+| Argument | Description |
+| :--- | :--- |
+| `run` | [실행](/ko/models/ref/query-panel/run) |
+| `artifactVersionName` | name:alias 형식의 [artifactVersion](/ko/models/ref/query-panel/artifact-version/) 이름 |
+
+<div id="return-value">
+  #### 반환 값
+</div>
+
+지정된 이름과 별칭에 대해 [실행](/ko/models/ref/query-panel/run)이 기록한 [아티팩트 버전](/ko/models/ref/query-panel/artifact-version/)
+
+### <a id="run-loggedArtifactVersions" />`run-loggedArtifactVersions`
+
+[실행](/ko/models/ref/query-panel/run)이 로깅한 모든 아티팩트 버전([artifactVersions](/ko/models/ref/query-panel/artifact-version/))을 반환합니다
+
+| Argument | Description |
+| :--- | :--- |
+| `run` | 하나의 [실행](/ko/models/ref/query-panel/run) |
+
+<div id="return-value">
+  #### 반환 값
+</div>
+
+[실행](/ko/models/ref/query-panel/run)에서 로깅한 [artifactVersions](/ko/models/ref/query-panel/artifact-version/)
+
+### <a id="run-name" />`run-name`
+
+[실행](/ko/models/ref/query-panel/run)의 이름을 반환합니다.
+
+| Argument | Description |
+| :--- | :--- |
+| `run` | [실행](/ko/models/ref/query-panel/run) |
+
+<div id="return-value">
+  #### 반환 값
+</div>
+
+[실행](/ko/models/ref/query-panel/run)의 이름
+
+### <a id="run-runtime" />`run-runtime`
+
+[실행](/ko/models/ref/query-panel/run)의 실행 시간(초 단위)을 반환합니다.
+
+| Argument | Description |
+| :--- | :--- |
+| `run` | [실행](/ko/models/ref/query-panel/run) |
+
+<div id="return-value">
+  #### 반환 값
+</div>
+
+[실행](/ko/models/ref/query-panel/run)의 실행 시간(초 단위)
+
+### <a id="run-summary" />`run-summary`
+
+[실행](/ko/models/ref/query-panel/run)의 summary &#95;typedDict&#95;를 반환합니다.
+
+| Argument | Description |
+| :--- | :--- |
+| `run` | [실행](/ko/models/ref/query-panel/run) |
+
+<div id="return-value">
+  #### 반환 값
+</div>
+
+[실행](/ko/models/ref/query-panel/run)의 summary를 나타내는 *typedDict*
+
+### <a id="run-usedArtifactVersions" />`run-usedArtifactVersions`
+
+[실행](/ko/models/ref/query-panel/run)이 사용한 모든 [artifactVersions](/ko/models/ref/query-panel/artifact-version/)을 반환합니다.
+
+| Argument | Description |
+| :--- | :--- |
+| `run` | [실행](/ko/models/ref/query-panel/run) |
+
+<div id="return-value">
+  #### 반환 값
+</div>
+
+[실행](/ko/models/ref/query-panel/run)에서 사용하는 [artifactVersions](/ko/models/ref/query-panel/artifact-version/)
+
+### <a id="run-user" />`run-user`
+
+[실행](/ko/models/ref/query-panel/run)의 [사용자](/ko/models/ref/query-panel/user/)를 반환합니다.
+
+| 인수 | 설명 |
+| :--- | :--- |
+| `run` | [실행](/ko/models/ref/query-panel/run) |
+
+<div id="return-value">
+  #### 반환 값
+</div>
+
+해당 [실행](/ko/models/ref/query-panel/run)의 [user](/ko/models/ref/query-panel/user/)
+
+<div id="list-ops">
+  ## op 목록
+</div>
+
+### <a id="run-config" />`run-config`
+
+[실행](/ko/models/ref/query-panel/run)의 config &#95;TypedDict&#95;를 반환합니다.
+
+| Argument | Description |
+| :--- | :--- |
+| `run` | [실행](/ko/models/ref/query-panel/run) |
+
+<div id="return-value">
+  #### 반환 값
+</div>
+
+[실행](/ko/models/ref/query-panel/run)의 config를 담은 *typedDict*
+
+### <a id="run-createdAt" />`run-createdAt`
+
+[실행](/ko/models/ref/query-panel/run)이 생성된 날짜 및 시간(datetime)을 반환합니다.
+
+| Argument | Description |
+| :--- | :--- |
+| `run` | [실행](/ko/models/ref/query-panel/run) |
+
+<div id="return-value">
+  #### 반환 값
+</div>
+
+[실행](/ko/models/ref/query-panel/run)이 생성된 시각을 나타내는 datetime
+
+### <a id="run-heartbeatAt" />`run-heartbeatAt`
+
+[실행](/ko/models/ref/query-panel/run)의 마지막 하트비트 일시를 반환합니다.
+
+| Argument | Description |
+| :--- | :--- |
+| `run` | [실행](/ko/models/ref/query-panel/run) |
+
+<div id="return-value">
+  #### 반환 값
+</div>
+
+[실행](/ko/models/ref/query-panel/run)의 마지막 하트비트 시각
+
+### <a id="run-history" />`run-history`
+
+[실행](/ko/models/ref/query-panel/run)의 로그 이력을 반환합니다.
+
+| Argument | Description |
+| :--- | :--- |
+| `run` | [실행](/ko/models/ref/query-panel/run) |
+
+<div id="return-value">
+  #### 반환 값
+</div>
+
+[실행](/ko/models/ref/query-panel/run)의 로그 기록
+
+### <a id="run-jobType" />`run-jobType`
+
+[실행](/ko/models/ref/query-panel/run)의 작업 유형(job type)을 반환합니다.
+
+| Argument | Description |
+| :--- | :--- |
+| `run` | [실행](/ko/models/ref/query-panel/run) |
+
+<div id="return-value">
+  #### 반환 값
+</div>
+
+[실행](/ko/models/ref/query-panel/run)의 작업 유형
+
+### <a id="run-loggedArtifactVersion" />`run-loggedArtifactVersion`
+
+지정된 이름과 별칭에 대해 [실행](/ko/models/ref/query-panel/run)이 로깅한 [artifactVersion](/ko/models/ref/query-panel/artifact-version/)을 반환합니다.
+
+| 인자 | 설명 |
+| :--- | :--- |
+| `run` | [실행](/ko/models/ref/query-panel/run) |
+| `artifactVersionName` | [artifactVersion](/ko/models/ref/query-panel/artifact-version/)의 `name:alias` 형식 이름 |
+
+<div id="return-value">
+  #### 반환 값
+</div>
+
+주어진 이름과 별칭에 대해 [실행](/ko/models/ref/query-panel/run)이 기록한 [artifactVersion](/ko/models/ref/query-panel/artifact-version/)
+
+### <a id="run-loggedArtifactVersions" />`run-loggedArtifactVersions`
+
+[실행](/ko/models/ref/query-panel/run)에서 로깅한 모든 [artifactVersions](/ko/models/ref/query-panel/artifact-version/)를 반환합니다.
+
+| Argument | Description |
+| :--- | :--- |
+| `run` | [실행](/ko/models/ref/query-panel/run) |
+
+<div id="return-value">
+  #### 반환 값
+</div>
+
+[실행](/ko/models/ref/query-panel/run)에서 로깅한 [artifactVersions](/ko/models/ref/query-panel/artifact-version/)
+
+### <a id="run-name" />`run-name`
+
+[실행](/ko/models/ref/query-panel/run)의 이름을 반환합니다.
+
+| Argument | Description |
+| :--- | :--- |
+| `run` | [실행](/ko/models/ref/query-panel/run) |
+
+<div id="return-value">
+  #### 반환 값
+</div>
+
+[실행](/ko/models/ref/query-panel/run) 이름
+
+### <a id="run-runtime" />`run-runtime`
+
+[실행](/ko/models/ref/query-panel/run)의 런타임(초)을 반환합니다.
+
+| Argument | Description |
+| :--- | :--- |
+| `run` | [실행](/ko/models/ref/query-panel/run) |
+
+<div id="return-value">
+  #### 반환 값
+</div>
+
+[실행](/ko/models/ref/query-panel/run)의 실행 시간(초 단위)
+
+### <a id="run-summary" />`run-summary`
+
+[실행](/ko/models/ref/query-panel/run)의 summary &#95;typedDict&#95;를 반환합니다.
+
+| Argument | Description |
+| :--- | :--- |
+| `run` | [실행](/ko/models/ref/query-panel/run) |
+
+<div id="return-value">
+  #### 반환 값
+</div>
+
+[실행](/ko/models/ref/query-panel/run)의 summary *typedDict*
+
+### <a id="run-usedArtifactVersions" />`run-usedArtifactVersions`
+
+[실행](/ko/models/ref/query-panel/run)이 사용한 모든 [아티팩트 버전](/ko/models/ref/query-panel/artifact-version/)을 반환합니다.
+
+| Argument | Description |
+| :--- | :--- |
+| `run` | 하나의 [실행](/ko/models/ref/query-panel/run) |
+
+<div id="return-value">
+  #### 반환 값
+</div>
+
+[실행](/ko/models/ref/query-panel/run)에서 사용된 [artifactVersions](/ko/models/ref/query-panel/artifact-version/)

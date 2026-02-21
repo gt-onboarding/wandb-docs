@@ -1,0 +1,15 @@
+---
+title: 한 번에 하나씩이 아니라 여러 실행을 일괄 삭제하려면 어떻게 해야 하나요?
+---
+
+[공용 API](/ko/models/ref/python/public-api/api)를 사용하여 여러 실행을 단일 작업으로 삭제하세요:
+
+```python
+import wandb
+
+api = wandb.Api()
+runs = api.runs('<entity>/<project>')
+for run in runs:
+    if <condition>:
+        run.delete()
+```

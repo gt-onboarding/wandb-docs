@@ -1,0 +1,189 @@
+---
+title: 프로젝트
+---
+
+<div id="chainable-ops">
+  ## 체인 가능한 op
+</div>
+
+### <a id="project-artifact" />`project-artifact`
+
+지정된 이름을 가진 [아티팩트](/ko/models/ref/query-panel/artifact/)를 해당 [프로젝트](/ko/models/ref/query-panel/project/) 내에서 반환합니다.
+
+| Argument | Description |
+| :--- | :--- |
+| `project` | [프로젝트](/ko/models/ref/query-panel/project/) |
+| `artifactName` | [아티팩트](/ko/models/ref/query-panel/artifact/)의 이름 |
+
+#### 반환 값
+
+[project](/ko/models/ref/query-panel/project/) 내에서 지정된 이름을 가진 [artifact](/ko/models/ref/query-panel/artifact/)
+
+### <a id="project-artifactType" />`project-artifactType`
+
+지정된 이름을 기준으로 [프로젝트](/ko/models/ref/query-panel/project/) 내의 [artifactType](/ko/models/ref/query-panel/artifact-type)을(를) 반환합니다.
+
+| Argument | Description |
+| :--- | :--- |
+| `project` | [프로젝트](/ko/models/ref/query-panel/project/) |
+| `artifactType` | [artifactType](/ko/models/ref/query-panel/artifact-type)의 이름 |
+
+#### 반환 값
+
+[project](/ko/models/ref/query-panel/project/) 내에서 주어진 이름을 갖는 [artifactType](/ko/models/ref/query-panel/artifact-type)
+
+### <a id="project-artifactTypes" />`project-artifactTypes`
+
+[project](/ko/models/ref/query-panel/project/)에 대한 [artifactType](/ko/models/ref/query-panel/artifact-type)을 반환합니다.
+
+| Argument | Description |
+| :--- | :--- |
+| `project` | 대상 [project](/ko/models/ref/query-panel/project/) |
+
+#### 반환값
+
+[프로젝트](/ko/models/ref/query-panel/project/)의 [artifactType](/ko/models/ref/query-panel/artifact-type)
+
+### <a id="project-artifactVersion" />`project-artifactVersion`
+
+지정된 이름과 버전에 해당하는 [artifactVersion](/ko/models/ref/query-panel/artifact-version)을(를) 해당 [프로젝트](/ko/models/ref/query-panel/project/) 내에서 반환합니다.
+
+| Argument | Description |
+| :--- | :--- |
+| `project` | 대상 [프로젝트](/ko/models/ref/query-panel/project/) |
+| `artifactName` | [artifactVersion](/ko/models/ref/query-panel/artifact-version)의 이름 |
+| `artifactVersionAlias` | [artifactVersion](/ko/models/ref/query-panel/artifact-version)의 버전 별칭 |
+
+#### 반환 값
+
+지정된 [프로젝트](/ko/models/ref/query-panel/project/) 내에서, 주어진 이름과 버전에 해당하는 [artifactVersion](/ko/models/ref/query-panel/artifact-version)
+
+### <a id="project-createdAt" />`project-createdAt`
+
+[프로젝트](/ko/models/ref/query-panel/project/)가 생성된 시간을 반환합니다.
+
+| Argument | Description |
+| :--- | :--- |
+| `project` | [프로젝트](/ko/models/ref/query-panel/project/) |
+
+#### 반환 값
+
+[프로젝트](/ko/models/ref/query-panel/project/)의 생성 시간
+
+### <a id="project-name" />`project-name`
+
+[프로젝트](/ko/models/ref/query-panel/project/)의 이름을 반환합니다.
+
+| Argument | Description |
+| :--- | :--- |
+| `project` | [프로젝트](/ko/models/ref/query-panel/project/) |
+
+#### 반환값
+
+[프로젝트](/ko/models/ref/query-panel/project/) 이름
+
+### <a id="project-runs" />`project-runs`
+
+[프로젝트](/ko/models/ref/query-panel/project/)의 [실행](/ko/models/ref/query-panel/run/) 목록을 반환합니다.
+
+| Argument | Description |
+| :--- | :--- |
+| `project` | [프로젝트](/ko/models/ref/query-panel/project/) |
+
+<div id="return-value">
+  #### Return Value
+</div>
+
+지정한 [프로젝트](/ko/models/ref/query-panel/project/)의 [실행](/ko/models/ref/query-panel/run/)
+
+<div id="list-ops">
+  ## op 목록
+</div>
+
+### <a id="project-artifact" />`project-artifact`
+
+지정한 이름을 가진 [프로젝트](/ko/models/ref/query-panel/project/) 내의 [아티팩트](/ko/models/ref/query-panel/artifact/)를 반환합니다.
+
+| Argument | Description |
+| :--- | :--- |
+| `project` | [프로젝트](/ko/models/ref/query-panel/project/) |
+| `artifactName` | [아티팩트](/ko/models/ref/query-panel/artifact/)의 이름 |
+
+#### 반환 값
+
+[프로젝트](/ko/models/ref/query-panel/project/) 내에서 지정한 이름의 [아티팩트](/ko/models/ref/query-panel/artifact/)
+
+### <a id="project-artifactType" />`project-artifactType`
+
+지정한 이름에 해당하는 [artifactType](/ko/models/ref/query-panel/artifact-type)을(를) 해당 [프로젝트](/ko/models/ref/query-panel/project/) 내에서 반환합니다.
+
+| Argument | Description |
+| :--- | :--- |
+| `project` | [프로젝트](/ko/models/ref/query-panel/project/) |
+| `artifactType` | [artifactType](/ko/models/ref/query-panel/artifact-type)의 이름 |
+
+#### 반환 값
+
+[프로젝트](/ko/models/ref/query-panel/project/) 내에서 지정된 이름에 대한 [artifactType](/ko/models/ref/query-panel/artifact-type)
+
+### <a id="project-artifactTypes" />`project-artifactTypes`
+
+[project](/ko/models/ref/query-panel/project/)에 대한 [artifactType](/ko/models/ref/query-panel/artifact-type)을 반환합니다.
+
+| 인수 | 설명 |
+| :--- | :--- |
+| `project` | 하나의 [project](/ko/models/ref/query-panel/project/) |
+
+#### 반환 값
+
+[project](/ko/models/ref/query-panel/project/)의 [artifactType](/ko/models/ref/query-panel/artifact-type)
+
+### <a id="project-artifactVersion" />`project-artifactVersion`
+
+지정된 이름과 버전에 해당하는 [artifactVersion](/ko/models/ref/query-panel/artifact-version)을(를) 특정 [프로젝트](/ko/models/ref/query-panel/project/) 내에서 반환합니다.
+
+| Argument | Description |
+| :--- | :--- |
+| `project` | [프로젝트](/ko/models/ref/query-panel/project/) |
+| `artifactName` | [artifactVersion](/ko/models/ref/query-panel/artifact-version)의 이름 |
+| `artifactVersionAlias` | [artifactVersion](/ko/models/ref/query-panel/artifact-version)의 버전 별칭(alias) |
+
+#### 반환 값
+
+[project](/ko/models/ref/query-panel/project/) 내에서 특정 이름과 버전에 해당하는 [artifactVersion](/ko/models/ref/query-panel/artifact-version)
+
+### <a id="project-createdAt" />`project-createdAt`
+
+[프로젝트](/ko/models/ref/query-panel/project/)의 생성 시각을 반환합니다.
+
+| Argument | Description |
+| :--- | :--- |
+| `project` | [프로젝트](/ko/models/ref/query-panel/project/) |
+
+#### 반환 값
+
+[프로젝트](/ko/models/ref/query-panel/project/)의 생성 시각
+
+### <a id="project-name" />`project-name`
+
+[프로젝트](/ko/models/ref/query-panel/project/)의 이름을 반환합니다.
+
+| Argument | Description |
+| :--- | :--- |
+| `project` | [프로젝트](/ko/models/ref/query-panel/project/) |
+
+#### 반환값
+
+[프로젝트](/ko/models/ref/query-panel/project/) 이름
+
+### <a id="project-runs" />`project-runs`
+
+[프로젝트](/ko/models/ref/query-panel/project/)의 [실행](/ko/models/ref/query-panel/run/)을 반환합니다.
+
+| Argument | Description |
+| :--- | :--- |
+| `project` | [프로젝트](/ko/models/ref/query-panel/project/) |
+
+#### 반환값
+
+[프로젝트](/ko/models/ref/query-panel/project/)의 [실행](/ko/models/ref/query-panel/run/)

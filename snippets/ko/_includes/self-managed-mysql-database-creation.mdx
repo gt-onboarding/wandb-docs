@@ -1,0 +1,11 @@
+---
+title: Self-Managed MySQL 데이터베이스 생성
+---
+
+다음 SQL 명령어를 사용하여 데이터베이스와 사용자를 생성합니다. `SOME_PASSWORD`를 임의로 정한 안전한 비밀번호로 바꾸십시오:
+
+```sql
+CREATE USER 'wandb_local'@'%' IDENTIFIED BY 'SOME_PASSWORD';
+CREATE DATABASE wandb_local CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+GRANT ALL ON wandb_local.* TO 'wandb_local'@'%' WITH GRANT OPTION;
+```

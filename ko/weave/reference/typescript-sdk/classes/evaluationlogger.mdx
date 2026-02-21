@@ -1,0 +1,196 @@
+---
+title: "클래스: EvaluationLogger"
+description: "TypeScript SDK 레퍼런스"
+---
+
+[weave](../) / EvaluationLogger
+
+EvaluationLogger는 예측값과 점수를 순차적으로 로깅할 수 있게 해줍니다.
+
+사전에 데이터셋과 배치 처리가 필요한 기존 Evaluation 클래스와 달리,
+EvaluationLogger는 예측이 발생할 때마다 유연한 방식으로 점수를 매기며 로깅할 수 있도록 합니다.
+
+`Example`
+
+```ts
+const ev = new EvaluationLogger({name: 'my-eval', dataset: 'my-dataset'});
+
+for (const example of streamingData) {
+  const output = await myModel.predict(example);
+  const pred = ev.logPrediction(example, output);
+
+  if (shouldScore(output)) {
+    pred.logScore("accuracy", calculateAccuracy(output));
+  }
+  pred.finish();
+}
+
+await ev.logSummary();
+```
+
+
+<div id="table-of-contents">
+  ## 목차
+</div>
+
+<div id="constructors">
+  ### 생성자
+</div>
+
+- [constructor](./evaluationlogger#constructor)
+
+<div id="methods">
+  ### 메서드
+</div>
+
+- [logPrediction](./evaluationlogger#logprediction)
+- [logPredictionAsync](./evaluationlogger#logpredictionasync)
+- [logSummary](./evaluationlogger#logsummary)
+
+## 생성자
+
+<div id="constructors">
+  ### 생성자
+</div>
+
+• **new EvaluationLogger**(`options`): [`EvaluationLogger`](./evaluationlogger)
+
+<div id="parameters">
+  #### 매개변수
+</div>
+
+| 이름 | 타입 |
+| :------ | :------ |
+| `options` | `EvaluationLoggerOptions` |
+
+<div id="returns">
+  #### 반환값
+</div>
+
+[`EvaluationLogger`](./evaluationlogger)
+
+<div id="defined-in">
+  #### 정의된 위치
+</div>
+
+[evaluationLogger.ts:554](https://github.com/wandb/weave/blob/1aee4006a95d913addb45881dfc950de7ce7b0bd/sdks/node/src/evaluationLogger.ts#L554)
+
+## 메서드
+
+<div id="logprediction">
+  ### logPrediction
+</div>
+
+▸ **logPrediction**(`inputs`, `output`): [`ScoreLogger`](./scorelogger)
+
+입력과 출력과 함께 예측을 기록합니다(동기 버전).
+자식 predict 호출이 포함된 predict_and_score 호출을 생성합니다.
+점수를 추가할 수 있도록 ScoreLogger를 즉시 반환합니다.
+
+이 메서드는 ScoreLogger를 동기적으로 반환합니다.
+ScoreLogger에 대한 작업(`logScore`, `finish`)은 대기열에 추가되며, 초기화가 완료되면 실행됩니다.
+
+<div id="parameters">
+  #### 매개변수
+</div>
+
+| 이름 | 타입 |
+| :------ | :------ |
+| `inputs` | `Record`\<`string`, `any`\> |
+| `output` | `any` |
+
+<div id="returns">
+  #### 반환값
+</div>
+
+[`ScoreLogger`](./scorelogger)
+
+`예제`
+
+```ts
+// Fire-and-forget 방식
+const scoreLogger = evalLogger.logPrediction({input: 'test'}, 'output');
+scoreLogger.logScore('accuracy', 0.95);
+scoreLogger.finish();
+await evalLogger.logSummary(); // 모든 작업이 완료될 때까지 대기
+```
+
+
+#### 정의 위치
+
+[evaluationLogger.ts:641](https://github.com/wandb/weave/blob/1aee4006a95d913addb45881dfc950de7ce7b0bd/sdks/node/src/evaluationLogger.ts#L641)
+
+___
+
+<div id="logpredictionasync">
+  ### logPredictionAsync
+</div>
+
+▸ **logPredictionAsync**(`inputs`, `output`): `Promise`\<[`ScoreLogger`](./scorelogger)\>
+
+입력과 출력을 포함한 예측을 기록합니다(비동기 버전).
+logPrediction()과 같지만, 예측 호출이 완전히 초기화된 후
+resolve되는 Promise를 반환합니다.
+
+다음 단계로 진행하기 전에 초기화가 완료될 때까지 대기해야 하는 경우에 사용하세요.
+
+<div id="parameters">
+  #### 매개변수
+</div>
+
+| 이름 | 타입 |
+| :------ | :------ |
+| `inputs` | `Record`\<`string`, `any`\> |
+| `output` | `any` |
+
+#### 반환
+
+`Promise`&lt;[`ScoreLogger`](./scorelogger)&gt;
+
+`예시`
+
+```ts
+// Awaitable 방식
+const scoreLogger = await evalLogger.logPredictionAsync({input: 'test'}, 'output');
+await scoreLogger.logScore('accuracy', 0.95);
+await scoreLogger.finish();
+```
+
+
+#### 정의된 곳
+
+[evaluationLogger.ts:666](https://github.com/wandb/weave/blob/1aee4006a95d913addb45881dfc950de7ce7b0bd/sdks/node/src/evaluationLogger.ts#L666)
+
+___
+
+<div id="logsummary">
+  ### logSummary
+</div>
+
+▸ **logSummary**(`summary?`): `Promise`\<`void`\>
+
+요약을 로그에 기록하고 평가를 완료합니다.
+새로운 summarize 호출을 생성하고 evaluate 호출을 마무리합니다.
+
+이 메서드는 `await` 없이(fire-and-forget 방식으로) 호출할 수 있지만,
+내부적으로는 보류 중인 모든 작업이 완료될 때까지 기다립니다.
+
+<div id="parameters">
+  #### 매개변수
+</div>
+
+| 이름 | 타입 |
+| :------ | :------ |
+| `summary?` | `Record`\<`string`, `any`\> |
+
+<div id="returns">
+  #### 반환값
+</div>
+
+`Promise`\<`void`\>
+
+<div id="defined-in">
+  #### 정의된 위치
+</div>
+
+[evaluationLogger.ts:767](https://github.com/wandb/weave/blob/1aee4006a95d913addb45881dfc950de7ce7b0bd/sdks/node/src/evaluationLogger.ts#L767)
