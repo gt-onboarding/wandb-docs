@@ -55,7 +55,7 @@ model.fit(
   ### `WandbMetricsLogger` 레퍼런스
 </div>
 
-| Parameter | Description |
+| 매개변수 | 설명 |
 | --------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | `log_freq`            | (`epoch`, `batch`, 또는 `int`): `epoch`인 경우 각 epoch가 끝날 때 지표를 기록합니다. `batch`인 경우 각 batch가 끝날 때 지표를 기록합니다. `int`인 경우 지정한 개수의 batch가 끝날 때마다 지표를 기록합니다. 기본값은 `epoch`입니다.                                 |
 | `initial_global_step` | (int): `initial_epoch`에서 학습을 재개하고 learning rate scheduler를 사용하는 경우, learning rate를 올바르게 기록하기 위해 이 인수를 사용합니다. 이 값은 `step_size * initial_step`으로 계산할 수 있습니다. 기본값은 0입니다. |
@@ -103,7 +103,7 @@ model.fit(
   ### `WandbModelCheckpoint` 참조
 </div>
 
-| Parameter | Description |
+| 매개변수 | 설명 |
 | ------------------------- |  ---- |
 | `filepath`   | (str): 모델 파일을 저장할 경로. |\
 | `monitor`                 | (str): 모니터링할 메트릭 이름.         |
@@ -227,7 +227,7 @@ model.fit(
   ### `WandbEvalCallback` 레퍼런스
 </div>
 
-| Parameter            | Description                       |
+| 매개변수            | 설명                       |
 | -------------------- | --------------------------------- |
 | `data_table_columns` | (list) `data_table`의 열 이름 목록 |
 | `pred_table_columns` | (list) `pred_table`의 열 이름 목록 |

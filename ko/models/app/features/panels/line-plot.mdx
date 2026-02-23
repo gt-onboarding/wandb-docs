@@ -5,9 +5,9 @@ title: 선 그래프 개요
 
 import LinePlotCaptureGroups from "/snippets/ko/_includes/line-plot-capture-groups.mdx";
 
-`wandb.Run.log()`으로 기록한 메트릭은 시간 경과에 따라 기본적으로 선형 플롯으로 표시됩니다. 선형 플롯은 여러 메트릭을 동시에 그리거나 사용자 정의 축을 계산하는 등 다양한 기능을 지원합니다.
+`wandb.Run.log()`으로 기록한 메트릭은 시간 경과에 따라 기본적으로 선 그래프로 표시됩니다. 선 그래프는 여러 메트릭을 동시에 그리거나 사용자 정의 축을 계산하는 등 다양한 기능을 지원합니다.
 
-이 페이지에서는 [워크스페이스](/ko/models/track/workspaces)에서 선형 플롯을 생성, 구성 및 관리하는 방법을 설명합니다.
+이 페이지에서는 [워크스페이스](/ko/models/track/workspaces)에서 선 그래프를 생성, 구성 및 관리하는 방법을 설명합니다.
 
 <Frame>
   <img src="/images/app_ui/line_plot_example.png" alt="Line plot example" />
@@ -25,7 +25,7 @@ import LinePlotCaptureGroups from "/snippets/ko/_includes/line-plot-capture-grou
 
 <Tabs>
   <Tab title="단일 메트릭 선 그래프">
-    [자동 워크스페이스](/ko/models/app/features/panels#workspace-modes)에서는 기록된 각 메트릭마다 단일 메트릭 선 그래프가 자동으로 생성됩니다. 자동 워크스페이스에서 삭제된 선 그래프를 다시 추가하거나, 수동 워크스페이스에 선 그래프를 추가하려면 다음 단계를 따르세요.
+    [자동 워크스페이스](/ko/models/app/features/panels#workspace-modes)에서는 기록된 각 메트릭마다 단일 메트릭 선 그래프가 자동으로 생성됩니다. 자동 워크스페이스에서 삭제한 선 그래프를 다시 추가하거나, 수동 워크스페이스에 선 그래프를 추가하려면 다음 단계를 따르세요.
 
     1. 워크스페이스로 이동합니다.
     2. 워크스페이스 전체에 선 그래프를 추가하려면 패널 검색 필드 근처의 컨트롤 바에서 **Add panels**를 클릭합니다.
@@ -47,9 +47,9 @@ import LinePlotCaptureGroups from "/snippets/ko/_includes/line-plot-capture-grou
       이 기능은 프리뷰 단계이며, 초대받은 사용자만 사용할 수 있습니다. 사용을 요청하려면 [support](mailto:support@wandb.com) 또는 담당 AISE에게 문의하세요.
     </Note>
 
-    [자동 workspace](/ko/models/app/features/panels#workspace-modes)에서는 기록된 각 메트릭마다 단일 메트릭 선 그래프가 자동으로 생성됩니다. 이 섹션에서는 JavaScript 정규식을 사용해 여러 메트릭을 함께 표시하는 단일 선 그래프를 생성하는 방법을 설명합니다. 선택적으로 여러 개의 단일 메트릭 그래프를 하나의 멀티 메트릭 그래프로 통합할 수 있습니다. 이렇게 하면 많은 메트릭이 기록된 workspace의 성능을 개선하고, 실행 결과를 더 효율적으로 분석하는 데 도움이 됩니다.
+    [자동 워크스페이스](/ko/models/app/features/panels#workspace-modes)에서는 기록된 각 메트릭마다 단일 메트릭 선 그래프가 자동으로 생성됩니다. 이 섹션에서는 JavaScript 정규식을 사용해 여러 메트릭을 함께 표시하는 단일 선 그래프를 생성하는 방법을 설명합니다. 선택적으로 여러 개의 단일 메트릭 그래프를 하나의 멀티 메트릭 그래프로 통합할 수 있습니다. 이렇게 하면 많은 메트릭이 기록된 워크스페이스의 성능을 개선하고, 실행 결과를 더 효율적으로 분석하는 데 도움이 됩니다.
 
-    1. workspace로 이동합니다.
+    1. 워크스페이스로 이동합니다.
     2. 워크스페이스 전체에 적용되는 선 그래프(line plot)를 추가하려면, 패널 검색 필드 근처의 컨트롤 바에서 **Add panels**를 클릭합니다.
 
        대신 특정 섹션에만 선 그래프를 직접 추가하려면, 섹션의 동작 메뉴 `...`를 클릭한 다음 **+ Add panels**를 클릭합니다.
@@ -87,7 +87,7 @@ import LinePlotCaptureGroups from "/snippets/ko/_includes/line-plot-capture-grou
     * `.*_accuracy`는 `train_accuracy`, `val_accuracy`, `test_accuracy`와 같이 서로 다른 데이터셋의 accuracy 메트릭과 매칭됩니다.
 
     **특정 메트릭 변형만 매칭하기**
-    원하는 메트릭만 매칭하도록 alternation을 사용합니다. 예를 들어, 비포획(non-capture) 그룹 `(?:layer_0|layer_10)_loss`는 중간 레이어를 제외하고 첫 번째와 열 번째 레이어의 loss만 매칭합니다.
+    원하는 메트릭만 매칭하도록 alternation을 사용합니다. 예를 들어, non-capture 그룹 `(?:layer_0|layer_10)_loss`는 중간 레이어를 제외하고 첫 번째와 열 번째 레이어의 loss만 매칭합니다.
 
     #### 캡처 그룹 이해하기
 
@@ -102,17 +102,17 @@ import LinePlotCaptureGroups from "/snippets/ko/_includes/line-plot-capture-grou
 이 섹션에서는 개별 선 그래프 패널, 섹션 내 모든 선 그래프 패널, 또는 워크스페이스의 모든 선 그래프 패널에 대한 설정을 수정하는 방법을 설명합니다. 선 그래프 설정에 대한 자세한 내용은 [Line plot reference](/ko/models/app/features/panels/line-plot/reference)를 참고하세요.
 
 <div id="individual-line-plot">
-  ### 개별 라인 플롯
+  ### 개별 선 그래프
 </div>
 
-개별 라인 플롯 설정은 섹션이나 워크스페이스 수준의 라인 플롯 설정보다 우선 적용됩니다. 라인 플롯을 사용자 지정하려면:
+개별 선 그래프 설정은 섹션이나 워크스페이스 수준의 선 그래프 설정보다 우선 적용됩니다. 선 그래프를 사용자 지정하려면:
 
 1. 워크스페이스로 이동합니다.
 2. 패널 위에 마우스를 올린 다음 톱니바퀴 아이콘을 클릭합니다.
 3. 나타나는 드로어에서 설정을 편집할 탭을 선택합니다.
 4. **Apply**를 클릭합니다.
 
-라인 플롯 설정은 다음과 같은 탭으로 구성됩니다:
+선 그래프 설정은 다음과 같은 탭으로 구성됩니다:
 
 * **Data**: x축, y축, 샘플링 방법, 스무딩, 이상치, 차트 유형을 설정합니다.
 * **Grouping**: 플롯에서 실행을 어떻게 그룹화하고 집계할지 설정합니다.
@@ -123,27 +123,27 @@ import LinePlotCaptureGroups from "/snippets/ko/_includes/line-plot-capture-grou
 각 설정에 대한 자세한 내용은 [Line plot reference](/ko/models/app/features/panels/line-plot/reference)를 참조하세요.
 
 <div id="all-line-plots-in-a-section">
-  ### 섹션의 모든 선형 플롯
+  ### 섹션의 모든 선 그래프
 </div>
 
-섹션 내 모든 선형 플롯의 기본 설정을 워크스페이스 수준의 선형 플롯 설정 대신 별도로 지정하려면:
+섹션 내 모든 선 그래프의 기본 설정을 워크스페이스 수준의 선 그래프 설정 대신 별도로 지정하려면:
 
 1. 워크스페이스로 이동합니다.
 2. 섹션의 톱니바퀴 아이콘을 클릭하여 설정을 엽니다.
 3. 표시되는 드로어에서 **Data** 또는 **Display preferences** 탭을 선택해 섹션의 기본 설정을 구성합니다. 각 **Data** 설정에 대한 자세한 내용은 [Line plot reference](/ko/models/app/features/panels/line-plot/reference)를 참조하세요. 각 표시 기본 설정에 대한 자세한 내용은 [Configure section layout](../#configure-section-layout)을 참조하세요.
 
 <div id="all-line-plots-in-a-workspace">
-  ### 워크스페이스의 모든 선형 플롯
+  ### 워크스페이스의 모든 선 그래프
 </div>
 
-워크스페이스의 모든 선형 플롯에 대한 기본 설정을 변경하려면 다음을 수행합니다:
+워크스페이스의 모든 선 그래프에 대한 기본 설정을 변경하려면 다음을 수행합니다:
 
 1. 워크스페이스로 이동합니다.
 2. 기어 모양 아이콘과 **Settings** 레이블이 있는 워크스페이스 설정 아이콘을 클릭합니다.
 3. **Line plots**를 클릭합니다.
 4. 나타나는 드로어에서 **Data** 또는 **Display preferences** 탭을 선택하여 워크스페이스의 기본 설정을 구성합니다.
    * 각 **Data** 설정에 대한 자세한 내용은 [Line plot reference](/ko/models/app/features/panels/line-plot/reference)를 참조하세요.
-   * 각 **Display preferences** 섹션에 대한 자세한 내용은 [Workspace display preferences](../#configure-workspace-layout)를 참조하세요. 워크스페이스 수준에서 선형 플롯의 기본 **Zooming** 동작을 설정할 수 있습니다. 이 설정은 동일한 x축 키를 사용하는 선형 플롯 간에 줌을 동기화할지 여부를 제어합니다. 기본적으로 비활성화되어 있습니다.
+   * 각 **Display preferences** 섹션에 대한 자세한 내용은 [Workspace display preferences](../#configure-workspace-layout)를 참조하세요. 워크스페이스 수준에서 선 그래프의 기본 **Zooming** 동작을 설정할 수 있습니다. 이 설정은 동일한 x축 키를 사용하는 선 그래프 간에 줌을 동기화할지 여부를 제어합니다. 기본적으로 비활성화되어 있습니다.
 
 <div id="visualize-average-values-on-a-plot">
   ## 플롯에서 평균값 시각화하기
@@ -187,7 +187,7 @@ with wandb.init() as run:
   <img src="/images/app_ui/visualization_add.gif" alt="시각화 패널 추가" />
 </Frame>
 
-1. 작업공간으로 이동합니다.
+1. 워크스페이스로 이동합니다.
 2. 페이지 오른쪽 상단에서 **Add panels** 버튼을 선택합니다.
 3. 왼쪽에 나타나는 패널에서 Evaluation 드롭다운을 확장합니다.
 4. **Run comparer**를 선택합니다.
@@ -220,7 +220,7 @@ with wandb.init() as run:
     4. **Legend** 탭을 선택합니다.
 
     <Frame>
-      <img src="/images/app_ui/plot_style_line_plot_legend.png" alt="선형 플롯 범례 설정" />
+      <img src="/images/app_ui/plot_style_line_plot_legend.png" alt="선 그래프 범례 설정" />
     </Frame>
   </Tab>
 </Tabs>
@@ -271,7 +271,7 @@ with wandb.init() as run:
 
 [Automations](/ko/models/automations/)를 사용하여 실행 지표가 지정한 조건을 만족할 때 팀에 알림을 보낼 수 있습니다. Automation은 Slack 채널에 메시지를 게시하거나 웹훅을 호출할 수 있습니다.
 
-선형 플롯(line plot)에서 해당 플롯에 표시된 지표에 대해 빠르게 [실행 지표 알림](/ko/models/automations/automation-events/#run-events)을 생성할 수 있습니다:
+선 그래프에서 해당 그래프에 표시된 지표에 대해 빠르게 [실행 지표 알림](/ko/models/automations/automation-events/#run-events)을 생성할 수 있습니다:
 
 1. 워크스페이스로 이동합니다.
 2. 패널 위에 마우스를 올린 다음 종(bell) 아이콘을 클릭합니다.
