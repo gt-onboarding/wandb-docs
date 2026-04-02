@@ -1,0 +1,11 @@
+---
+title: 실행에 기록된 데이터에 코드로 직접 접근하려면 어떻게 해야 하나요?
+---
+
+`wandb.log`으로 기록한 메트릭은 history 객체에 저장됩니다. API를 사용해 history 객체에 접근하세요:
+
+```python
+api = wandb.Api()
+run = api.run("username/project/run_id")
+print(run.history())
+```

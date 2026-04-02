@@ -1,0 +1,88 @@
+---
+title: "트레이스 소개"
+description: "W&B Weave에서 트레이스를 사용하는 방법을 알아보세요"
+---
+
+<Note>
+  이 노트북은 대화형 노트북입니다. 로컬에서 실행하거나 아래 링크를 통해 열 수 있습니다:
+
+  * [Google Colab에서 열기](https://colab.research.google.com/github/wandb/docs/blob/main/weave/cookbooks/source/Intro_to_Weave_Hello_Trace.ipynb)
+  * [GitHub에서 소스 보기](https://github.com/wandb/docs/blob/main/weave/cookbooks/source/Intro_to_Weave_Hello_Trace.ipynb)
+</Note>
+
+<div id="prerequisites">
+  ## 🔑 사전 준비 사항
+</div>
+
+Weave에서 트레이싱을 시작하기 전에 다음 사전 준비를 완료하세요.
+
+1. W&amp;B Weave SDK를 설치하고 [API key](https://wandb.ai/settings#apikeys)로 로그인합니다.
+2. OpenAI SDK를 설치하고 [API key](https://platform.openai.com/api-keys)로 로그인합니다.
+3. W&amp;B 프로젝트를 초기화합니다.
+
+```python lines
+# 의존성 설치 및 임포트
+!pip install wandb weave openai -q
+
+import json
+import os
+from getpass import getpass
+
+from openai import OpenAI
+
+import weave
+
+# 🔑 API key 설정
+# 이 셀을 실행하면 `getpass`를 통해 API key 입력을 요청하며, 터미널에 입력 내용이 표시되지 않습니다.
+#####
+print("---")
+print(
+    "Create a W&B API key at: https://wandb.ai/settings#apikeys"
+)
+os.environ["WANDB_API_KEY"] = getpass("Enter your W&B API key: ")
+print("---")
+print("You can generate your OpenAI API key here: https://platform.openai.com/api-keys")
+os.environ["OPENAI_API_KEY"] = getpass("Enter your OpenAI API key: ")
+print("---")
+#####
+
+# 🏠 W&B 프로젝트 이름을 입력하세요
+weave_client = weave.init("MY_PROJECT_NAME")  # 🐝 W&B 프로젝트 이름
+```
+
+<div id="run-your-first-trace">
+  ## 🐝 첫 트레이스 실행하기
+</div>
+
+다음 코드 샘플은 `@weave.op` 데코레이터를 사용해 Weave에서 트레이스를 캡처하고 시각화하는 방법을 보여 줍니다. 여기서는 `extract_fruit`라는 함수를 정의하며, 이 함수는 문장에서 구조화된 데이터(과일, 색상, 맛)를 추출하기 위해 OpenAI의 GPT-4o에 프롬프트를 전송합니다. 함수에 `@weave.op` 데코레이터를 적용하면 Weave가 입력, 출력, 중간 단계 등을 포함한 함수 실행을 자동으로 추적합니다. 이 함수를 예시 문장을 인자로 전달해 호출하면 전체 트레이스가 저장되며, Weave UI에서 확인할 수 있습니다.
+
+```python lines
+@weave.op()  # 🐝 요청을 추적하는 데코레이터
+def extract_fruit(sentence: str) -> dict:
+    client = OpenAI()
+    system_prompt = (
+        "Parse sentences into a JSON dict with keys: fruit, color and flavor."
+    )
+    response = client.chat.completions.create(
+        model="gpt-4o",
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": sentence},
+        ],
+        temperature=0.7,
+        response_format={"type": "json_object"},
+    )
+    extracted = response.choices[0].message.content
+    return json.loads(extracted)
+
+sentence = "There are many fruits that were found on the recently discovered planet Goocrux. There are neoskizzles that grow there, which are purple and taste like candy."
+extract_fruit(sentence)
+```
+
+<div id="looking-for-more-examples">
+  ## 🚀 더 많은 예제가 필요하신가요?
+</div>
+
+* [빠른 시작 가이드](/ko/weave/quickstart)를 확인하세요.
+* [고급 트레이싱 기법](/ko/weave/tutorial-tracing_2)에 대해 자세히 알아보세요.
+* [Weave 트레이싱](/ko/weave/guides/tracking/tracing)에 대해 자세히 알아보세요.

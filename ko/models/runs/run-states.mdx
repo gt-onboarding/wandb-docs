@@ -1,0 +1,76 @@
+---
+title: 실행 상태
+description: W&B 실행이 가질 수 있는 다양한 상태를 설명합니다.
+---
+
+[실행 상태](/ko/models/runs/run-states#run-states)는 W&amp;B 실행의 현재 상태를 나타냅니다. W&amp;B App 또는 W&amp;B Python SDK를 사용한 프로그래밍 방식으로 실행의 [상태를 확인](/ko/models/runs/run-states#view-the-state-of-a-run)할 수 있습니다.
+
+<div id="run-states">
+  ## 실행 상태
+</div>
+
+다음 표는 실행이 취할 수 있는 상태를 설명합니다:
+
+| State | Description |
+| ----- | ----- |
+| `Crashed` | 내부 프로세스에서 실행의 하트비트 전송이 중단된 상태입니다. 머신에 크래시가 발생했을 때 나타날 수 있습니다. |
+| `Failed` | 실행이 0이 아닌 종료 상태 코드로 종료된 상태입니다. |
+| `Finished`| 실행이 종료되고 데이터 동기화가 완료되었거나 `wandb.Run.finish()`를 호출한 상태입니다. |
+| `Killed` | 실행이 완료되기 전에 강제로 중단된 상태입니다. |
+| `Running` | 실행이 여전히 진행 중이며 최근에 하트비트를 전송한 상태입니다.  |
+| `Pending` | 실행이 예약되었지만 아직 시작되지 않은 상태입니다(스윕 및 Launch 작업에서 흔히 발생합니다). |
+
+<div id="run-states-in-sweeps">
+  ### 스위프에서의 실행 상태
+</div>
+
+실행이 [스위프](/ko/models/sweeps/)의 일부일 때, 실행 상태는 스위프 상태와는 별도로 동작합니다:
+
+* **개별 실행 상태**는 각 실행의 실행 상태(Running, Finished, Failed 등)를 반영합니다.
+* **스위프 상태**는 기존 실행의 동작 방식이 아니라, 새로운 실행을 생성할지 여부를 제어합니다.
+* 스위프를 일시 중지하거나 중지해도 이미 실행 중인 실행에는 영향을 주지 않습니다.
+* 스위프를 취소하는 경우에만 실행 중인 실행을 강제로 종료하여(상태를 `Killed`로 변경) 중단합니다.
+
+스위프와 실행 상태가 어떻게 상호 작용하는지에 대한 자세한 설명은 [스위프와 실행 상태 이해하기](/ko/models/sweeps/pause-resume-and-cancel-sweeps#understanding-sweep-and-run-statuses)를 참고하세요.
+
+<div id="view-the-state-of-a-run">
+  ## 실행 상태 보기
+</div>
+
+Python SDK 또는 W&amp;B App을 사용해 코드에서나 인터페이스에서 실행 상태를 확인할 수 있습니다.
+
+<Tabs>
+  <Tab title="Python SDK">
+    [`wandb.Api.Run`](/ko/models/ref/python/public-api/runs) 객체의 `state` 속성을 사용하여 실행의 현재 상태에 접근할 수 있습니다.
+
+    다음 코드 스니펫은 지정된 프로젝트의 모든 실행 상태를 가져와 출력합니다. 다음 코드를 Python 환경에 복사해 붙여넣고, 꺾쇠 괄호(`< >`)로 둘러싸인 값을 사용자 환경에 맞는 값으로 바꾸십시오:
+
+    ```python
+    import wandb
+
+    api = wandb.Api()
+
+    runs = api.runs(path="<entity>/<project>")
+
+    # run 객체의 속성에 접근
+    for run in runs:
+        print(f"Run: {run.name}")
+        print(f"Run state: {run.state}")
+        print()
+    ```
+
+    다양한 기준으로 필터를 적용해 프로젝트에서 실행을 가져올 수 있습니다. 실행을 프로그래밍 방식으로 필터링하는 방법은 [Filter runs](/ko/models/runs/filter-runs)를 참조하십시오.
+  </Tab>
+
+  <Tab title="W&B App">
+    W&amp;B App에서 실행 상태를 확인하려면 다음을 수행하십시오:
+
+    1. 사용 중인 W&amp;B 프로젝트로 이동합니다.
+    2. 프로젝트 사이드바에서 **Workspace** 또는 **Runs** 탭을 선택합니다.
+    3. 상태를 확인하려는 실행을 검색하거나 스크롤하여 찾습니다.
+    4. 해당 실행을 선택해 실행 개요 페이지를 엽니다.
+    5. **Overview** 탭을 선택합니다.
+
+    **State** 필드 옆에서 실행의 현재 상태를 확인할 수 있습니다.
+  </Tab>
+</Tabs>

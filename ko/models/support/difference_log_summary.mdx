@@ -1,0 +1,11 @@
+---
+title: ".log()와 .summary의 차이점은 무엇인가요?"
+---
+
+`summary`는 테이블에 표시되고, `log`는 이후 그래프 작성을 위해 모든 값을 저장합니다.
+
+예를 들어, 정확도가 변경될 때마다 `run.log()`를 호출하세요. 기본적으로 `run.log()`는 해당 metric에 대해 summary 값을 수동으로 설정하지 않는 한, 그 metric의 summary 값을 업데이트합니다.
+
+산점도(scatterplot)와 평행 좌표(parallel coordinate) 플롯은 summary 값을 사용하고, 선형(line) 플롯은 `run.log`로 기록된 모든 값을 표시합니다.
+
+일부 사용자는 가장 최근에 기록된 정확도 대신, 최적의 정확도를 반영하도록 summary를 수동으로 설정하는 것을 선호합니다.

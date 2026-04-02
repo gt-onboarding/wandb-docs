@@ -1,0 +1,164 @@
+---
+description: 사용자 설정에서 프로필 정보, 계정 기본 설정, 알림, 베타 제품 참여, GitHub 통합, 스토리지 사용량, 계정 활성화, 팀 생성을 관리합니다.
+title: 사용자 설정 관리
+---
+
+import ApiKeyCreate from "/snippets/ko/_includes/api-key-create.mdx";
+import ApiKeySecurity from "/snippets/ko/_includes/api-key-security.mdx";
+
+사용자 프로필 페이지로 이동한 다음 오른쪽 상단에 있는 사용자 아이콘을 클릭합니다. 드롭다운 메뉴에서 **Settings**를 선택합니다.
+
+<div id="profile">
+  ## 프로필
+</div>
+
+**프로필** 섹션에서는 계정 이름과 소속 기관을 관리하고 수정할 수 있습니다. 원하는 경우 자기소개, 위치, 개인 또는 소속 기관의 웹사이트 링크를 추가하고 프로필 이미지를 업로드할 수 있습니다.
+
+<div id="edit-your-intro">
+  ## 소개 편집하기
+</div>
+
+소개를 편집하려면 프로필 상단의 **Edit**을 클릭하세요. 열리는 WYSIWYG 편집기는 Markdown을 지원합니다.
+
+1. 줄을 편집하려면 해당 줄을 클릭하세요. 시간을 절약하려면 `/`를 입력한 뒤 목록에서 Markdown을 선택할 수 있습니다.
+2. 항목의 드래그 핸들을 끌어서 순서를 변경하세요.
+3. 블록을 삭제하려면 드래그 핸들을 클릭한 다음 **Delete**를 클릭하세요.
+4. 변경 사항을 저장하려면 **Save**를 클릭하세요.
+
+<div id="add-social-badges">
+  ### 소셜 배지 추가
+</div>
+
+X에서 `@weights_biases` 계정의 팔로우 배지를 추가하려면, 배지 이미지를 가리키는 HTML `<img>` 태그를 포함한 마크다운 스타일의 링크를 추가하면 됩니다:
+
+```markdown
+[![X: @weights_biases](https://img.shields.io/twitter/follow/weights_biases?style=social)](https://x.com/intent/follow?screen_name=weights_biases)
+```
+
+`<img>` 태그에서 `width`, `height` 또는 둘 다를 지정할 수 있습니다. 둘 중 하나만 지정하면 이미지의 가로세로 비율이 유지됩니다.
+
+<div id="default-team">
+  ## 기본 팀
+</div>
+
+여러 팀에 속해 있는 경우 **Default team** 섹션에서 실행 또는 Weave 트레이스에 팀이 지정되지 않았을 때 사용할 기본 팀을 설정할 수 있습니다. 한 개 팀에만 속해 있는 경우 해당 팀이 기본 팀이 되며, 이 섹션은 표시되지 않습니다.
+
+계속하려면 탭을 선택하세요.
+
+<Tabs>
+  <Tab title="멀티테넌트 클라우드">
+    **Default location to create new projects in** 옆의 드롭다운을 클릭한 다음, 기본 팀을 선택합니다.
+  </Tab>
+
+  <Tab title="전용 클라우드 / 셀프 매니지드">
+    1. **Default location to create new projects in** 옆의 드롭다운을 클릭한 다음, 기본 팀 또는 개인 엔터티를 선택합니다.
+    2. (**선택 사항**) 관리자가 **Account** &gt; **Settings** &gt; **Privacy**에서 공개 프로젝트를 활성화했다면, 새 프로젝트의 기본 공개 범위를 설정합니다. **Default project privacy in your personal account** 옆의 버튼을 클릭한 다음 **Private**(기본값) 또는 **Public**을 선택합니다.
+    3. (**선택 사항**) 관리자가 **Account** &gt; **Settings** &gt; **Privacy**에서 [기본 코드 저장 및 diff 기능](/ko/models/app/features/panels/code/)을 활성화했다면, 실행에 대해 이를 사용하려면 **Enable code saving in your personal account** 를 클릭합니다.
+  </Tab>
+</Tabs>
+
+<Note>
+  자동화된 환경에서 스크립트를 실행할 때 기본 팀을 지정하려면, `WANDB_ENTITY` [환경 변수](https://docs.wandb.ai/models/track/environment-variables)를 사용해 기본 위치를 지정할 수 있습니다.
+</Note>
+
+<div id="teams">
+  ## 팀
+</div>
+
+**팀** 섹션에는 사용자의 모든 팀이 나열됩니다.
+
+1. 팀 이름을 클릭하여 팀 페이지로 이동합니다.
+2. 추가 팀에 참여할 수 있는 권한이 있다면 **We found teams for you to join** 옆에 있는 **View teams**를 클릭합니다.
+3. 필요한 경우 **Hide teams in public profile**를 켭니다.
+
+<Note>
+  팀을 생성하거나 관리하려면 [팀 관리](/ko/platform/app/settings-page/teams/)를 참조하세요.
+</Note>
+
+<div id="api-keys">
+  ## API keys
+</div>
+
+**API keys** 섹션에서는 W&amp;B 서비스 인증에 사용할 개인 API key를 관리할 수 있습니다.
+
+<div id="view-your-api-keys">
+  ### API key 조회
+</div>
+
+API key 테이블에는 다음 정보가 표시됩니다:
+
+* **Key ID**: 각 API key의 앞부분으로, 식별에 사용됩니다
+* **Name**: 키를 생성할 때 지정한 설명용 이름
+* **Created**: 키가 생성된 일시
+* **Last used**: 마지막으로 사용된 일시
+
+<Note>
+  보안상의 이유로 테이블에는 key ID(키의 앞부분)만 표시됩니다. 전체 비밀 API key는 생성 시 단 한 번만 표시됩니다.
+</Note>
+
+API key 이름이나 ID의 일부를 입력하여 API key 목록을 검색 및 필터링합니다.
+
+<div id="create-a-new-api-key">
+  ### 새 API key 생성
+</div>
+
+<ApiKeyCreate />
+
+<div id="delete-an-api-key">
+  ### API key 삭제하기
+</div>
+
+API key를 삭제하여 액세스를 철회하려면 다음을 수행하십시오:
+
+1. API key 테이블에서 삭제할 키를 찾습니다.
+2. 해당 키 옆의 삭제 버튼을 클릭합니다.
+3. 삭제를 확인합니다.
+
+<Warning>
+  API key를 삭제하면 해당 키를 사용 중인 모든 스크립트와 서비스에 대한 액세스가 즉시 철회됩니다. 기존 키를 삭제하기 전에 모든 시스템이 새 API key를 사용하도록 업데이트되었는지 확인하십시오.
+</Warning>
+
+<ApiKeySecurity />
+
+<div id="beta-features">
+  ## 베타 기능
+</div>
+
+**Beta Features** 섩션에서 개발 중인 신규 제품의 재미있는 추가 기능과 사전 체험용 기능을 선택적으로 활성화할 수 있습니다. 활성화하려는 베타 기능 옆의 토글 스위치를 전환하세요.
+
+<div id="alerts">
+  ## 알림
+</div>
+
+실행이 크래시 나거나 완료될 때, 또는 사용자 정의 알림을 설정해 [wandb.Run.alert()](/ko/models/runs/alert/)로 알림을 받을 수 있습니다. 이메일 또는 Slack으로 알림을 수신합니다. 알림을 받고 싶은 이벤트 유형 오른쪽의 스위치를 전환하세요.
+
+* **Runs finished**: Weights and Biases 실행이 성공적으로 완료되었는지 여부입니다.
+* **Run crashed**: 실행이 완료되지 못하고 실패했을 때의 알림입니다.
+
+알림을 설정하고 관리하는 방법에 대한 자세한 내용은 [wandb.Run.alert()로 알림 보내기](/ko/models/runs/alert/)를 참조하세요.
+
+<div id="personal-github-integration">
+  ## 개인 GitHub 통합
+</div>
+
+개인 GitHub 계정을 연결할 수 있습니다. GitHub 계정을 연결하려면 다음 단계를 따르세요.
+
+1. **Connect Github** 버튼을 선택합니다. 그러면 OAuth(오픈 인증) 페이지로 리디렉션됩니다.
+2. **Organization access** 섹션에서 액세스를 부여할 조직을 선택합니다.
+3. **Authorize** **wandb**를 선택합니다.
+
+<div id="delete-your-account">
+  ## 계정 삭제
+</div>
+
+계정을 삭제하려면 **Delete Account** 버튼을 클릭하세요.
+
+<Warning>
+  계정 삭제는 취소할 수 없습니다.
+</Warning>
+
+<div id="storage">
+  ## Storage
+</div>
+
+**Storage** 섹션에서는 Weights &amp; Biases 서버에서 현재 계정이 사용한 전체 스토리지 용량을 설명합니다. 기본 스토리지 한도는 100GB입니다. 스토리지와 요금에 대한 자세한 내용은 [Pricing](https://wandb.ai/site/pricing) 페이지를 참조하세요.

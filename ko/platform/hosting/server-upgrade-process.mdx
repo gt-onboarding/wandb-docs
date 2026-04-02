@@ -1,0 +1,111 @@
+---
+description: 다양한 설치 방법에서 W&B 버전과 라이선스를 업데이트하는 가이드입니다.
+title: W&B 라이선스 및 버전 업데이트
+---
+
+W&B Server를 설치할 때 사용한 것과 동일한 방식으로 W&B Server 버전과 라이선스를 업데이트하십시오. 다음 표는 배포 방식에 따라 라이선스와 버전을 업데이트하는 방법을 정리한 것입니다:
+
+| Release Type    | Description         |
+| ---------------- | ------------------ |
+| [Terraform](#update-with-terraform) | W&B는 클라우드 배포를 위해 세 개의 공개 Terraform 모듈을 지원합니다: [AWS](https://registry.terraform.io/modules/wandb/wandb/aws/latest), [Google Cloud](https://registry.terraform.io/modules/wandb/wandb/google/latest), [Azure](https://registry.terraform.io/modules/wandb/wandb/azurerm/latest). |
+| [Helm](#update-with-helm)              | 기존 Kubernetes 클러스터에 W&B를 설치하기 위해 [Helm 차트](https://github.com/wandb/helm-charts)를 사용할 수 있습니다.  |
+
+<div id="update-with-terraform">
+  ## Terraform로 업데이트
+</div>
+
+Terraform을 사용하여 라이선스와 버전을 업데이트합니다. 아래 표는 클라우드 플랫폼별 W&B 관리 Terraform 모듈을 나열합니다.
+
+|Cloud provider| Terraform module|
+|-----|-----|
+|AWS|[AWS Terraform module](https://registry.terraform.io/modules/wandb/wandb/aws/latest)|
+|Google Cloud|[Google Cloud Terraform module](https://registry.terraform.io/modules/wandb/wandb/google/latest)|
+|Azure|[Azure Terraform module](https://registry.terraform.io/modules/wandb/wandb/azurerm/latest)|
+
+1. 먼저, 사용 중인 클라우드 제공업체에 해당하는 W&B 관리 Terraform 모듈 페이지로 이동합니다. 위 표를 참고하여 클라우드 제공업체에 맞는 Terraform 모듈을 찾으십시오.
+2. Terraform 구성에서 `wandb_version` 및 `license`를 Terraform `wandb_app` 모듈 구성 안에서 업데이트합니다:
+
+   ```hcl
+   module "wandb_app" {
+       source  = "wandb/wandb/<cloud-specific-module>"
+       version = "new_version"
+       license       = "new_license_key" # 새로운 라이선스 키
+       wandb_version = "new_wandb_version" # 원하는 W&B 버전
+       ...
+   }
+   ```
+3. `terraform plan` 및 `terraform apply`를 사용하여 Terraform 구성을 적용합니다.
+   ```bash
+   terraform init
+   terraform apply
+   ```
+
+4. (선택 사항) `terraform.tfvars` 또는 다른 `.tfvars` 파일을 사용하는 경우:
+
+   새 W&B 버전과 라이선스 키로 `terraform.tfvars` 파일을 생성하거나 업데이트합니다.
+   ```bash
+   terraform plan -var-file="terraform.tfvars"
+   ```
+   구성을 적용합니다. Terraform 워크스페이스 디렉터리에서 다음을 실행합니다:  
+   ```bash
+   terraform apply -var-file="terraform.tfvars"
+   ```
+
+<div id="update-with-helm">
+  ## Helm으로 업데이트하기
+</div>
+
+<div id="update-wb-with-spec">
+  ### spec을 사용하여 W&amp;B 업데이트
+</div>
+
+1. Helm 차트 `*.yaml` 구성 파일에서 `image.tag` 및/또는 `license` 값을 수정하여 새 버전을 지정합니다:
+
+   ```yaml
+   license: 'new_license'
+   image:
+     repository: wandb/local
+     tag: 'new_version'
+   ```
+
+2. 다음 명령으로 Helm 업그레이드를 실행합니다:
+
+   ```bash
+   helm repo update
+   helm upgrade --namespace=wandb --create-namespace \
+     --install wandb wandb/wandb --version ${chart_version} \
+     -f ${wandb_install_spec.yaml}
+   ```
+
+<div id="update-license-and-version-directly">
+  ### 라이선스 및 버전을 직접 업데이트
+</div>
+
+1. 새 라이선스 키와 이미지 태그를 환경 변수로 설정합니다:
+
+   ```bash
+   export LICENSE='new_license'
+   export TAG='new_version'
+   ```
+
+2. 아래 명령어로 Helm 릴리스를 업그레이드하여, 새 값을 기존 설정과 병합합니다:
+
+   ```bash
+   helm repo update
+   helm upgrade --namespace=wandb --create-namespace \
+     --install wandb wandb/wandb --version ${chart_version} \
+     --reuse-values --set license=$LICENSE --set image.tag=$TAG
+   ```
+
+자세한 내용은 공개 리포지토리의 [업그레이드 가이드](https://github.com/wandb/helm-charts/blob/main/upgrade)를 참조하십시오.
+
+<div id="update-with-admin-ui">
+  ## 관리자 UI로 업데이트
+</div>
+
+이 방법은 일반적으로 Self-Managed Docker 설치처럼 W&B 서버 컨테이너의 환경 변수로 라이선스가 설정되어 있지 않은 경우에만 사용할 수 있습니다.
+
+1. [W&B Deployment Page](https://deploy.wandb.ai/)에서 새 라이선스를 발급받습니다. 업그레이드하려는 배포에 대해 올바른 조직과 배포 ID에 해당하는 라이선스인지 확인합니다.
+2. W&B App에서 **License** 페이지에 접속합니다. **Settings** > **License**를 클릭하거나 `<host-url>/console/settings/license`로 이동합니다.
+3. 라이선스 관리 섹션으로 이동합니다.
+4. 새 라이선스 키를 입력한 후 변경 내용을 저장합니다.

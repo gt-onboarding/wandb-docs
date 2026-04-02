@@ -1,0 +1,51 @@
+---
+title: "wandb sync"
+---
+
+import WandbSync from "/snippets/ko/_includes/cli/wandb-sync.mdx";
+
+<WandbSync />
+
+
+<div id="usage">
+  ## 사용법
+</div>
+
+```bash
+wandb sync [PATH] [OPTIONS]
+```
+
+
+<div id="arguments">
+  ## 인자
+</div>
+
+| 인자 | 설명 | 필수 여부 |
+| :--- | :--- | :--- |
+| `PATH` | 설명 없음 | 아니요 |
+
+<div id="options">
+  ## 옵션
+</div>
+
+| Option | Description |
+| :--- | :--- |
+| `--id` | 업로드할 실행 ID입니다. |
+| `--project`, `-p` | 업로드할 프로젝트입니다. |
+| `--entity`, `-e` | 범위를 지정할 엔터티입니다. |
+| `--job_type` | 관련 실행들을 함께 그룹화하기 위한 실행 유형을 지정합니다. |
+| `--sync-tensorboard` | tfevent 파일을 wandb로 스트리밍합니다. |
+| `--include-globs` | 포함할 glob 패턴의 쉼표로 구분된 목록입니다. |
+| `--exclude-globs` | 제외할 glob 패턴의 쉼표로 구분된 목록입니다. |
+| `--include-online` | 온라인 실행을 포함합니다. |
+| `--include-offline` | 오프라인 실행을 포함합니다. |
+| `--include-synced` | 동기화된 실행을 포함합니다. |
+| `--mark-synced` | 실행을 동기화된 것으로 표시합니다 (기본값: True). |
+| `--sync-all` | 모든 실행을 동기화합니다 (기본값: False). |
+| `--clean` | 동기화된 실행을 삭제합니다 (기본값: False). |
+| `--clean-old-hours` | 지정한 시간(시간 단위) 이전에 생성된 실행을 삭제합니다. --clean 플래그와 함께 사용해야 합니다. (기본값: 24) |
+| `--clean-force` | 확인 프롬프트 없이 삭제를 수행합니다. (기본값: False) |
+| `--show` | 표시할 실행 개수입니다 (기본값: 5). |
+| `--append` | 실행을 이어서 기록합니다 (기본값: False). |
+| `--skip-console` | 콘솔 로그를 건너뜁니다 (기본값: False). |
+| `--replace-tags` | 'old_tag1=new_tag1,old_tag2=new_tag2' 형식으로 태그를 교체합니다. |

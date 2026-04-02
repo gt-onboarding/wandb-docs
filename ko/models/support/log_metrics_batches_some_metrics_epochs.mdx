@@ -1,0 +1,13 @@
+---
+title: 배치 단위로 기록할 메트릭과 에폭 단위로만 기록할 메트릭이 있으면 어떻게 하나요?
+---
+
+각 배치에서 특정 메트릭을 기록하고 플롯을 표준화하려면, 메트릭과 함께 원하는 x축 값도 함께 기록하세요. 사용자 지정 플롯에서 편집을 클릭한 다음, 사용자 지정 x축을 선택하면 됩니다.
+
+```python
+import wandb
+
+with wandb.init() as run:
+    run.log({"batch": batch_idx, "loss": 0.3})
+    run.log({"epoch": epoch, "val_acc": 0.94})
+```

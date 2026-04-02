@@ -1,0 +1,243 @@
+---
+title: "Op를 사용해 함수 호출 자동 추적하기"
+description: "Weave에서 모든 호출을 자동으로 기록하는 버전 관리 함수"
+---
+
+Weave op는 모든 호출을 자동으로 기록하는 버전 관리 함수입니다.
+
+<Tabs>
+  <Tab title="Python">
+    op를 생성하려면 Python 함수를 `weave.op()` 데코레이터로 감싸세요.
+
+    ```python lines lines
+    import weave
+
+    @weave.op()
+    def track_me(v):
+        return v + 5
+
+    weave.init('intro-example')
+    track_me(15)
+    ```
+
+    op를 호출하면, 코드가 마지막 호출 이후 변경되었을 경우 새로운 op 버전이 생성되고, 함수의 입력과 출력이 기록됩니다.
+
+    `@weave.op()`으로 데코레이션된 함수는, 호출 전에 `weave.init('your-project-name')`를 호출하지 않으면 코드 버전 관리 및 추적 없이 일반 함수처럼 동작합니다.
+
+    op는 Weave toolbelt를 사용해 [서비스로 제공](/ko/weave/guides/tools/serve)하거나 [배포](/ko/weave/guides/tools/deploy)할 수 있습니다.
+  </Tab>
+
+  <Tab title="TypeScript">
+    op를 생성하려면 TypeScript 함수를 `weave.op`으로 감싸세요.
+
+    ```typescript lines
+    import * as weave from 'weave'
+
+    function trackMe(v: number) {
+        return v + 5
+    }
+
+    const trackMeOp = weave.op(trackMe)
+    trackMeOp(15)
+
+    // 이렇게 인라인으로 작성할 수도 있으며, 이 방식이 더 편리할 수 있습니다.
+    const trackMeInline = weave.op((v: number) => v + 5)
+    trackMeInline(15)
+    ```
+  </Tab>
+</Tabs>
+
+<div id="customize-display-names">
+  ## 표시 이름 사용자 정의
+</div>
+
+<Tabs>
+  <Tab title="Python">
+    `@weave.op` 데코레이터에서 `name` 매개변수를 설정하여 op의 표시 이름을 사용자 정의할 수 있습니다.
+
+    ```python lines
+    @weave.op(name="custom_name")
+    def func():
+        ...
+    ```
+  </Tab>
+
+  <Tab title="TypeScript">
+    ```plaintext
+    이 기능은 아직 TypeScript에서는 사용할 수 없습니다.
+    ```
+  </Tab>
+</Tabs>
+
+<div id="apply-kinds-and-colors">
+  ## 종류와 색상 적용
+</div>
+
+Weave UI에서 op를 보다 체계적으로 정리하려면, 코드의 `@weave.op` 데코레이터에 `kind` 및 `color` 인수를 추가해 op에 사용자 정의 종류와 색상을 적용할 수 있습니다. 예를 들어, 다음 코드는 상위 함수에 `LLM` `kind`와 `blue` `color`를, 중첩 함수에는 `tool` `kind`와 `red` `color`를 적용합니다:
+
+<Tabs>
+  <Tab title="Python">
+    ```python lines
+    import weave
+
+    weave.init("<your-team-name>/<your-project-name>")
+
+    @weave.op(kind="LLM", color="blue")
+    def llm_func():
+        @weave.op(kind="tool", color="red")
+        def tool_func():
+            return "tool result"
+
+        tool_result = tool_func()
+        
+        return f"llm result with {tool_result}"
+
+    llm_func()
+    ```
+  </Tab>
+
+  <Tab title="TypeScript">
+    ```plaintext
+    이 기능은 아직 TypeScript에서는 사용할 수 없습니다.
+    ```
+  </Tab>
+</Tabs>
+
+이렇게 하면 Weave UI에서 op에 다음과 같이 색상과 종류가 적용됩니다:
+
+<Frame>
+  ![Weave UI 예시로, 상위 호출에는 LLM kind와 blue color가 적용되어 있고, 중첩 호출에는 tool kind와 red color가 적용되어 있습니다.](/images/weave/weave_colors_kinds.png)
+</Frame>
+
+사용 가능한 `kind` 값은 다음과 같습니다:
+
+* `agent`
+* `llm`
+* `tool`
+* `search`
+
+사용 가능한 `color` 값은 다음과 같습니다:
+
+* `red`
+* `orange`
+* `yellow`
+* `green`
+* `blue`
+* `purple`
+
+<div id="customize-logged-inputs-and-outputs">
+  ## 로깅되는 입력과 출력 사용자 정의하기
+</div>
+
+<Tabs>
+  <Tab title="Python">
+    원래 함수를 수정하지 않고(예: 민감한 데이터를 숨기기 위해) Weave에 로깅되는 데이터를 변경하려면 op 데코레이터에 `postprocess_inputs`와 `postprocess_output`을 전달하면 됩니다.
+
+    `postprocess_inputs`는 키가 인자 이름, 값이 인자 값인 dict를 입력으로 받아, 변환된 입력이 담긴 dict를 반환합니다.
+
+    `postprocess_output`은 일반적으로 함수가 반환하던 값(any 타입)을 입력으로 받아, 변환된 출력을 반환합니다.
+
+    ```python lines
+    from dataclasses import dataclass
+    from typing import Any
+    import weave
+
+    @dataclass
+    class CustomObject:
+        x: int
+        secret_password: str
+
+    def postprocess_inputs(inputs: dict[str, Any]) -> dict[str, Any]:
+        return {k:v for k,v in inputs.items() if k != "hide_me"}
+
+    def postprocess_output(output: CustomObject) -> CustomObject:
+        return CustomObject(x=output.x, secret_password="REDACTED")
+
+    @weave.op(
+        postprocess_inputs=postprocess_inputs,
+        postprocess_output=postprocess_output,
+    )
+    def func(a: int, hide_me: str) -> CustomObject:
+        return CustomObject(x=a, secret_password=hide_me)
+
+    weave.init('hide-data-example') # 🐝
+    func(a=1, hide_me="password123")
+    ```
+  </Tab>
+
+  <Tab title="TypeScript">
+    ```plaintext
+    이 기능은 아직 TypeScript에서 사용할 수 없습니다.
+    ```
+  </Tab>
+</Tabs>
+
+<div id="control-sampling-rate">
+  ## 샘플링 비율 제어
+</div>
+
+<Tabs>
+  <Tab title="Python">
+    `@weave.op` 데코레이터의 `tracing_sample_rate` 매개변수를 설정해서 op 호출이 얼마나 자주 추적될지 제어할 수 있습니다. 이는 호출 빈도가 높은 op에서 일부 호출만 추적하면 되는 경우에 유용합니다.
+
+    샘플링 비율은 루트 호출에만 적용된다는 점에 유의하십시오. 어떤 op에 샘플링 비율이 설정되어 있어도, 먼저 다른 op에 의해 호출되는 경우 해당 샘플링 비율은 무시됩니다.
+
+    ```python lines
+    @weave.op(tracing_sample_rate=0.1)  # 호출의 약 10%만 추적
+    def high_frequency_op(x: int) -> int:
+        return x + 1
+
+    @weave.op(tracing_sample_rate=1.0)  # 항상 추적(기본값)
+    def always_traced_op(x: int) -> int:
+        return x + 1
+    ```
+
+    op 호출이 샘플링되지 않은 경우:
+
+    * 함수는 정상적으로 실행됩니다.
+    * Weave로 전송되는 추적 데이터가 없습니다.
+    * 해당 호출에서 자식 op도 추적되지 않습니다.
+
+    샘플링 비율은 0.0 이상 1.0 이하 값이어야 합니다.
+  </Tab>
+
+  <Tab title="TypeScript">
+    ```plaintext
+    이 기능은 아직 TypeScript에서는 사용할 수 없습니다.
+    ```
+  </Tab>
+</Tabs>
+
+<div id="control-call-link-output">
+  ## 호출 링크 출력 제어
+</div>
+
+로깅 중에 호출 링크 출력이 표시되지 않도록 하려면 `WEAVE_PRINT_CALL_LINK` 환경 변수를 `false`로 설정하세요. 이는 출력의 장황함을 줄이고 로그를 더 깔끔하게 유지하는 데 유용합니다.
+
+```bash
+export WEAVE_PRINT_CALL_LINK=false
+```
+
+<div id="deleting-an-op">
+  ## op 삭제
+</div>
+
+<Tabs>
+  <Tab title="Python">
+    op 버전을 삭제하려면 op ref에서 `.delete()`를 호출하세요.
+
+    ```python lines
+    weave.init('intro-example')
+    my_op_ref = weave.ref('track_me:v1')
+    my_op_ref.delete()
+    ```
+
+    삭제된 op에 다시 접근하려고 하면 오류가 발생합니다.
+  </Tab>
+
+  <Tab title="TypeScript">
+    ```plaintext
+    이 기능은 아직 TypeScript에서는 사용할 수 없습니다.
+    ```
+  </Tab>
+</Tabs>

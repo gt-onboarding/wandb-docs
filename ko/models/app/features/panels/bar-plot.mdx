@@ -1,0 +1,31 @@
+---
+description: 지표를 시각화하고, 축을 사용자 정의하며, 범주형 데이터를 막대로 비교합니다.
+title: 막대 그래프
+---
+
+막대 그래프는 범주형 데이터를 직사각형 막대로 나타내며, 세로 또는 가로 방향으로 그릴 수 있습니다. 모든 로그된 값의 길이가 1일 때, `wandb.Run.log()`를 사용할 경우 막대 그래프가 기본으로 표시됩니다.
+
+<Frame>
+    <img src="/images/app_ui/bar_plot.png" alt="W&B에서 상자 그림과 가로 막대 그래프를 플로팅하는 예시"  />
+</Frame>
+
+차트 설정에서 표시할 최대 실행 개수를 설정하고, 실행을 임의의 구성(config)으로 그룹화하며, 레이블 이름을 변경해 커스터마이즈할 수 있습니다.
+
+<Frame>
+    <img src="/images/app_ui/bar_plot_custom.png" alt="커스터마이즈된 막대 그래프"  />
+</Frame>
+
+<div id="customize-bar-plots">
+  ## 막대 그래프 사용자 지정
+</div>
+
+여러 요약 통계를 하나의 차트 유형으로 결합하는 **Box** 또는 **Violin** 플롯을 생성할 수도 있습니다.
+
+1. Runs 테이블에서 실행을 그룹화합니다.
+2. 워크스페이스에서 'Add panel'을 클릭합니다.
+3. 표준 'Bar Chart'를 추가하고, 표시할 메트릭을 선택합니다.
+4. 'Grouping' 탭에서 'box plot' 또는 'Violin' 등을 선택해 해당 스타일로 시각화합니다.
+
+<Frame>
+    <img src="/images/app_ui/bar_plots.gif" alt="막대 그래프 사용자 지정"  />
+</Frame>

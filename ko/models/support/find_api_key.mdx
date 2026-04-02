@@ -1,0 +1,56 @@
+---
+title: API key 생성 및 관리 방법
+---
+
+import ApiKeyFind from "/snippets/ko/_includes/api-key-find.mdx";
+import ApiKeyCreate from "/snippets/ko/_includes/api-key-create.mdx";
+import ApiKeySecurity from "/snippets/ko/_includes/api-key-security.mdx";
+import ServiceAccountApiKeyDelete from "/snippets/ko/_includes/service-account-api-key-delete.mdx";
+
+<div id="create-a-new-api-key">
+  ## 새 API key 생성하기
+</div>
+
+<ApiKeyCreate />
+
+<div id="find-your-api-keys">
+  ## API key 찾는 방법
+</div>
+
+<ApiKeyFind />
+
+<div id="delete-an-api-key">
+  ## API key 삭제
+</div>
+
+<Warning>
+  API key를 삭제하면 해당 key를 사용하는 모든 스크립트 및 서비스의 접근 권한이 즉시 해지됩니다. 기존 key를 삭제하기 전에 모든 시스템이 새 key를 사용하도록 모두 업데이트되었는지 확인하십시오.
+</Warning>
+
+접근 권한을 해지하려면 API key를 삭제하십시오. 자세한 내용은 **Personal API key** 또는 **Service Account API key** 탭을 선택하여 확인하십시오.
+
+<Tabs>
+  <Tab title="Personal API key">
+    1. [wandb.ai/settings](https://wandb.ai/settings) 페이지로 이동합니다.
+    2. **API Keys** 섹션에서 삭제하려는 key 옆의 삭제 버튼을 클릭합니다.
+  </Tab>
+
+  <Tab title="Service account API key">
+    <ServiceAccountApiKeyDelete />
+
+    워크플로 자동화를 위해 서비스 계정을 사용하는 방법에 대해 더 알아보려면 [서비스 계정을 사용해 워크플로를 자동화하는 방법](/ko/platform/hosting/iam/service-accounts)을 참고하십시오.
+  </Tab>
+</Tabs>
+
+<div id="replace-an-api-key">
+  ## API key 교체하기
+</div>
+
+API key를 교체(로테이션)하려면:
+
+1. [새 API key 만들기](#create-a-new-api-key).
+2. 모든 스크립트, 서비스, 환경을 업데이트하여 새 API key를 사용하도록 설정합니다.
+3. 새 API key가 모든 곳에서 정상적으로 동작하는지 테스트합니다.
+4. 이전 API key를 삭제합니다.
+
+<ApiKeySecurity />

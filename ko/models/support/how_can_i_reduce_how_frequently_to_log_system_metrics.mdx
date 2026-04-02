@@ -1,0 +1,9 @@
+---
+title: 시스템 메트릭 로깅 주기를 어떻게 변경하나요?
+---
+
+[시스템 메트릭](/ko/models/ref/python/experiments/system-metrics/)을(를) 로깅하는 주기를 설정하려면 `_stats_sampling_interval`을(를) 초 단위의 부동소수점 값으로 설정하세요. 기본값: `10.0`.
+
+```python
+wandb.init(settings=wandb.Settings(x_stats_sampling_interval=30.0))
+```
